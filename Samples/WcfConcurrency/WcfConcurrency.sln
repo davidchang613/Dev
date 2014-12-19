@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleWCFServer", "Console
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleWCFClient", "ConsoleWCFClient\ConsoleWCFClient.csproj", "{933FC75D-30DE-454B-A606-237D93AB30D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLibrary", "DataLibrary\DataLibrary.csproj", "{A3505939-45AA-4928-ADAA-399872660F13}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{933FC75D-30DE-454B-A606-237D93AB30D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{933FC75D-30DE-454B-A606-237D93AB30D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{933FC75D-30DE-454B-A606-237D93AB30D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3505939-45AA-4928-ADAA-399872660F13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3505939-45AA-4928-ADAA-399872660F13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3505939-45AA-4928-ADAA-399872660F13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3505939-45AA-4928-ADAA-399872660F13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

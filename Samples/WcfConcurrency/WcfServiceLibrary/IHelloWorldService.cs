@@ -4,6 +4,8 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
+using DataLibrary;
+using System.ServiceModel.Web;
 
 namespace WcfServiceLibrary
 {
@@ -17,7 +19,12 @@ namespace WcfServiceLibrary
         [OperationContract]
         CompositeType GetDataUsingDataContract(CompositeType composite);
 
+        [OperationContract]
+        //[WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, UriTemplate = "Person/{Id}")]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "Person/{Id}")]
+        //[WebGet(
         // TODO: Add your service operations here
+        Person GetPerson(int Id);
     }
 
     // Use a data contract as illustrated in the sample below to add composite types to service operations.

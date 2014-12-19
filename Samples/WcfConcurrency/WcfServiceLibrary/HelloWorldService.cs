@@ -5,6 +5,8 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
 using System.Threading;
+using DataLibrary;
+using System.ServiceModel.Web;
 
 namespace WcfServiceLibrary
 {
@@ -19,7 +21,6 @@ namespace WcfServiceLibrary
             Thread.Sleep(5000);
         }
         
-
         public CompositeType GetDataUsingDataContract(CompositeType composite)
         {
             if (composite == null)
@@ -34,5 +35,9 @@ namespace WcfServiceLibrary
         }
 
         
+        public Person GetPerson(int Id)
+        {
+            return new Person() { Id = 1, LastName = "Chang", FirstName = "David" };
+        }
     }
 }

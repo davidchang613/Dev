@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="jquery-1.7.1.js"></script>
+    <script>
+        $(document).ready(function () {    
+        });
+
+        var GetJson = function () {
+            //Cross Origin Resource Sharing (CORS)
+            jQuery.support.cors = true;            
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:1249/Service1.svc/GetJson",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    var result = data.GetEmployeeJSONResult;
+                    var id = result.Id;
+                    var name = result.Name;
+                    var salary = result.Salary;
+                    $('#jsonData').html('');
+                    $('#jsonData').append('<table border="1"><tr><th>Employee Id</th><th>Name</th><th>Salary</th></tr><tr><td>' + id + '</td><td>' + name + '</td><td>' + salary + '</td></tr></table>');
+
+                },
+                error: function (xhr) {                    
+                    alert(xhr.responseText);
+                }
+            });
+        }
+        var GetXml = function () {           
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:1249/Service1.svc/GetXml",
+                dataType: "xml",
+                success: function (xml) {
+                    $(xml).find('EmployeeXML').each(function () {
+                        var id = $(this).find('Id').text();
+                        var name = $(this).find('Name').text();
+                        var salary = $(this).find('Salary').text();
+                        $('#xmlData').html('');
+                        $('#xmlData').append('<table border="1"><tr><th>Employee Id</th><th>Name</th><th>Salary</th></tr><tr><td>' + id + '</td><td>' + name + '</td><td>' + salary + '</td></tr></table>');
+                    });
+                },
+                error: function (xhr) {
+                    //alert('Error');
+                    alert(xhr.responseText);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <input type="button" id="xmlButton" onclick="GetXml()" value="Bind XML"/>
+    <br />
+    <br />
+    <div id="xmlData">
+
+    </div>
+    <br />
+    <input type="button" id="jsonButton" onclick="GetJson()" value="Bind JSON" />
+    <br />
+    <br />
+    <div id="jsonData">
+
+    </div>
+</body>
+</html>
