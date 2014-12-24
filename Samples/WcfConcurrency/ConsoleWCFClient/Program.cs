@@ -15,10 +15,10 @@ namespace ConsoleWCFClient
             Console.WriteLine("Enter Client name");
             string str = Console.ReadLine();
             ServiceReference.HelloWorldServiceClient obj = new ServiceReference.HelloWorldServiceClient();
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 500; i++)
             {
                 obj.Call(str);
-                Thread.Sleep(2000);
+                Thread.Sleep(200);
             }
         }
     }
