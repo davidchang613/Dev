@@ -9,6 +9,7 @@ using System.Threading;
 namespace WcfServiceLibrary
 {
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service1" in both code and config file together.
+    [ServiceBehavior(InstanceContextMode=InstanceContextMode.PerCall, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class HelloWorldService : IHelloWorldService
     {
         private int i;
