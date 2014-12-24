@@ -19,13 +19,14 @@ namespace ConsoleWCFServer
             
             // Create ServiceHost
             ServiceHost host = new ServiceHost(typeof(WcfServiceLibrary.HelloWorldService), httpUrl);
-
+            
             // add a service endpoint
             host.AddServiceEndpoint(typeof(WcfServiceLibrary.IHelloWorldService), new WSHttpBinding(), "");
-
+                        
             // Enable metadata exchange
             ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
             smb.HttpGetEnabled = true;
+            
             host.Description.Behaviors.Add(smb);
 
             host.Open();
