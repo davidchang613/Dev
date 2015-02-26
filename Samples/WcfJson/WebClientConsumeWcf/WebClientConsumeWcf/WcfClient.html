@@ -7,7 +7,32 @@
         $(document).ready(function () {    
         });
 
+        function GetJsonData() {
+            alert("GetJsonData");
+            var json = new Object();
+            json.Name = "NameField";
+            json.ValueField = "ValueField";
+            var jsonInner = new Object();
+            //jsonInner.Name = "Inner Name";
+            //jsonInner.ValueField = "InnerValueField";
+            json.ListSomeType = new Object();
+            
+            json.ListSomeType.Name = "Inner Name";
+            json.ListSomeType.ValueField = "InnerValueField";
+             
+            json.ListSomeTypeArray = []; // [{ "Name": "1", "ValueField": "2" }, { "Name": "3", "ValueField": "4" }];
+            json.ListSomeTypeArray.push({ "Name": "5", "ValueField": "6" });
+            json.ListSomeTypeArray.push({ "Name": "7", "ValueField": "8" });
+
+            json.DictionaryList = [];
+            json.DictionaryList.push({ "SomeKey": "SomeValue" });
+            
+            alert(JSON.stringify(json));
+            return JSON.stringify(json);
+        }
+
         var GetJson = function () {
+            alert("here");
             //Cross Origin Resource Sharing (CORS)
             jQuery.support.cors = true;            
             $.ajax({
@@ -15,6 +40,9 @@
                 url: "http://localhost:1249/Service1.svc/GetJson",
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
+                xhrFields: {
+                    withCredentials: true
+                },
                 success: function (data) {
                     var result = data.GetEmployeeJSONResult;
                     var id = result.Id;
@@ -25,6 +53,29 @@
 
                 },
                 error: function (xhr) {                    
+                    alert(xhr.responseText);
+                }
+            });
+            alert("Call another service");
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:1249/Service1.svc/GetJsonWithParameter/id=123/action=update",
+                contentType: "application/json;charset=utf-8",
+                data: GetJsonData(),
+                dataType: "json",
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function (response) {
+                    var result = response.GetEmployeeJSONResult;
+                    var id = result.Id;
+                    var name = result.Name;
+                    var salary = result.Salary;
+                    $('#jsonData').html('');
+                    $('#jsonData').append('<table border="1"><tr><th>Employee Id</th><th>Name</th><th>Salary</th></tr><tr><td>' + id + '</td><td>' + name + '</td><td>' + salary + '</td></tr></table>');
+
+                },
+                error: function (xhr) {
                     alert(xhr.responseText);
                 }
             });

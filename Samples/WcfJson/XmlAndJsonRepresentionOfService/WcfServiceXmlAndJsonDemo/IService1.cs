@@ -24,6 +24,30 @@ namespace WcfServiceXmlAndJsonDemo
         [WebInvoke(Method = "GET", UriTemplate = "GetJson", ResponseFormat = WebMessageFormat.Json,BodyStyle = WebMessageBodyStyle.Wrapped)]
         EmployeeJSON GetEmployeeJSON();
 
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "GetJsonWithParameter/id={id}/action={action}", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare)]
+        EmployeeJSON GetEmployeeJSONWithParameter(string id, string action, SomeType someType);
+
         #endregion
+    }
+    
+    [DataContract]
+    public class SomeType
+    {
+        [DataMember]
+        public string Name;
+
+        [DataMember]
+        public string ValueField;
+
+        [DataMember]
+        public SomeType ListSomeType;
+
+        [DataMember]
+        public List<SomeType> ListSomeTypeArray;
+
+        //[DataMember]
+        //public Dictionary<string, string> DictionaryList;
+
     }
 }
