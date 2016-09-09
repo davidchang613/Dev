@@ -397,7 +397,19 @@ namespace WebAPISite.Controllers
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
-            if (!result.Succeeded)
+            if (result.Succeeded)
+            {
+                // set Two Factor Enabled
+                IdentityResult x = await this.UserManager.SetTwoFactorEnabledAsync(user.Id, true);
+
+                // Confirm email account
+                string code = await this.UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                code = System.Web.HttpUtility.UrlEncode(code);
+                var callbackUrl = model.BaseUrl + "AccountConfirm/ConfirmEmail?userId=" + user.Id + "&code=" + code;
+                await this.UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+            }
+            else
             {
                 return GetErrorResult(result);
             }

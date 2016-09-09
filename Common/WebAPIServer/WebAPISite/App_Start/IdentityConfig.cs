@@ -6,6 +6,8 @@ using Microsoft.Owin;
 using WebAPISite.Models;
 using Microsoft.Owin.Security;
 using System.Security.Claims;
+using System.Net.Mail;
+using System.Net;
 
 namespace WebAPISite
 {
@@ -62,7 +64,7 @@ namespace WebAPISite
         }
     }
 
-    // Added this ApplicationSignInManager
+    // I Added this ApplicationSignInManager
     public class ApplicationSignInManager : SignInManager<ApplicationUser, string>
     {
         public ApplicationSignInManager(ApplicationUserManager userManager, IAuthenticationManager authenticationManager)
@@ -78,6 +80,35 @@ namespace WebAPISite
         public static ApplicationSignInManager Create(IdentityFactoryOptions<ApplicationSignInManager> options, IOwinContext context)
         {
             return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(), context.Authentication);
+        }
+    }
+
+    // I added Email Service
+    public class EmailService : IIdentityMessageService
+    {
+        public Task SendAsync(IdentityMessage message)
+        {
+            // Plug in your email service here to send an email.
+
+            string fromEmail = "davidchang613@gmail.com"; // ConfigurationManager.AppSettings["FromEmail"];
+            string EmailServer = "smtp.gmail.com"; // ConfigurationManager.AppSettings["EMAILSERVER"];
+            int PortNumber = 587; // Convert.ToInt32(ConfigurationManager.AppSettings["Port"]);
+            string username = "davidchang613@gmail.com"; // ConfigurationManager.AppSettings["UserName"];
+            string pwd = "a2013487df320"; // ConfigurationManager.AppSettings["Pwd"];
+
+            MailMessage email = new MailMessage(fromEmail, message.Destination);
+            
+            email.Subject = message.Subject;
+
+            email.Body = message.Body;
+
+            email.IsBodyHtml = true;
+
+            var mailClient = new SmtpClient(EmailServer, PortNumber) { Credentials = new NetworkCredential(username, pwd) };
+
+            return mailClient.SendMailAsync(email);
+
+            //return Task.FromResult(0);
         }
     }
 }
