@@ -148,9 +148,11 @@ namespace WebAPIClientBasePortable
                 var data = new { Email = userName, Password = password, RememberMe = rememberMe };
 
                 List<KeyValuePair<string, string>> loginInfo = new List<KeyValuePair<string, string>>();
-                loginInfo.Add(new KeyValuePair<string, string>("grant_type", "password"));
+                //loginInfo.Add(new KeyValuePair<string, string>("grant_type", "password"));
+                
                 loginInfo.Add(new KeyValuePair<string, string>("Email", _userName));
                 loginInfo.Add(new KeyValuePair<string, string>("password", _password));
+                loginInfo.Add(new KeyValuePair<string, string>("RememberMe", "true"));
 
                 var loginContent = new FormUrlEncodedContent(loginInfo);
 
@@ -168,6 +170,8 @@ namespace WebAPIClientBasePortable
                 if (!_lastCallSuccess)
                 {
                     failedReason = returnContent["Message"].ToString();
+                    if (returnContent["ExceptionMessage"] != null)
+                        failedReason += returnContent["ExceptionMessage"].ToString();
                 }
                 SetLastCallResult(_lastCallSuccess, apiPath[ClientAPIPath.Login], failedReason);
             }
@@ -525,7 +529,7 @@ namespace WebAPIClientBasePortable
 
         protected virtual RegisterBindingModel getRegisterBindingModel(RegisterBindingModel model)
         {
-            return new RegisterBindingModel { Email = model.Email, Password = model.Password, ConfirmPassword = model.ConfirmPassword, Number = model.Number };
+            return new RegisterBindingModel { BaseUrl = model.BaseUrl, Email = model.Email, Password = model.Password, ConfirmPassword = model.ConfirmPassword, Number = model.Number };
         }
 
         public virtual void Register(RegisterBindingModel model)
@@ -643,6 +647,11 @@ namespace WebAPIClientBasePortable
                 {
                     failedReason += "\r\n" + error;
                 }                
+            }
+
+            if (returnContent["ExceptionMessage"] != null)
+            {
+                failedReason += "\r\n" + returnContent["ExceptionMessage"].ToString();                
             }
 
             return failedReason;

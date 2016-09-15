@@ -10,6 +10,7 @@ using Microsoft.Owin.Security.OAuth;
 using Owin;
 using WebAPISite.Providers;
 using WebAPISite.Models;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace WebAPISite
 {
@@ -25,11 +26,28 @@ namespace WebAPISite
             // Configure the db context and user manager to use a single instance per request
             app.CreatePerOwinContext(ApplicationDbContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
+            // add this
+            app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
 
             // Enable the application to use a cookie to store information for the signed in user
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
-            app.UseCookieAuthentication(new CookieAuthenticationOptions());
-            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+            //app.UseCookieAuthentication(new CookieAuthenticationOptions());
+            app.UseCookieAuthentication(new CookieAuthenticationOptions {
+                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+                LoginPath = new PathString("/Account/Login"),
+                Provider = new CookieAuthenticationProvider
+                {
+                    OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
+                    validateInterval: TimeSpan.FromMinutes(30),
+                    regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager, DefaultAuthenticationTypes.ApplicationCookie))
+                }
+            });
+
+            //app.UseGoogleAuthentication("1070591667222-1mijjue8qlt1qoni0pn6c1v491qrgp79.apps.googleusercontent.com", "5ydpMCYku7c4DdyyGWdmoYiy");
+
+            //app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+            double timeoutmin = 30;
+            app.UseTwoFactorSignInCookie(DefaultAuthenticationTypes.TwoFactorCookie, TimeSpan.FromMinutes(timeoutmin));
 
             // Configure the application for OAuth based flow
             PublicClientId = "self";

@@ -17,6 +17,8 @@ using WebAPISite.Providers;
 using WebAPISite.Results;
 using WebAPIModel;
 using WebAPISite.Models;
+using System.Linq;
+//using System.Web.Mvc;
 
 namespace WebAPISite.Controllers
 {
@@ -405,7 +407,7 @@ namespace WebAPISite.Controllers
                 // Confirm email account
                 string code = await this.UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                 code = System.Web.HttpUtility.UrlEncode(code);
-                var callbackUrl = model.BaseUrl + "AccountConfirm/ConfirmEmail?userId=" + user.Id + "&code=" + code;
+                var callbackUrl = model.BaseUrl + "AccountMaintenance/ConfirmEmail?userId=" + user.Id + "&code=" + code;
                 await this.UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
             }
@@ -448,6 +450,34 @@ namespace WebAPISite.Controllers
                 return GetErrorResult(result); 
             }
             return Ok();
+        }
+
+        [Route("ResetPasswordAPI")]
+        public async Task<IHttpActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var resultconfirmemail = await UserManager.VerifyUserTokenAsync(model.UserId, "ResetPassword", model.Code);
+
+            var user = await UserManager.FindByIdAsync(model.UserId);
+
+            if (user == null || !resultconfirmemail || user.Email.ToLower() != model.Email.ToLower())
+            {
+                // Don't reveal that the user does not exist
+
+                ModelState.AddModelError("err", "User information is not valid. Please try again.");
+                return BadRequest(ModelState);
+            }
+
+            var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            else
+                return GetErrorResult(result);
         }
 
         protected override void Dispose(bool disposing)
@@ -496,6 +526,62 @@ namespace WebAPISite.Controllers
 
             return null;
         }
+
+
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("GetSendCodeProviders")]
+        public async Task<IHttpActionResult> GetSendCodeProviders(LoginInfoViewModel model)
+        {
+            try
+            {
+                var user = await this.UserManager.FindByNameAsync(model.Email);
+
+                var userId = await SignInManager.GetVerifiedUserIdAsync();
+
+                if (user.Id == null || userId == null)
+                {
+                    return BadRequest("Failed to verified User Id");
+                }
+                var userFactors = await this.UserManager.GetValidTwoFactorProvidersAsync(user.Id);
+                //userFactors.Remove("Email Code");
+                var factorOptions = userFactors.Select(purpose => new { Text = purpose, Value = purpose }).ToList();
+                //return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
+                return Ok(factorOptions);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+
+        }
+
+
+        [System.Web.Http.HttpPost]
+        [System.Web.Mvc.ValidateAntiForgeryToken]
+        [System.Web.Http.Route("SendCode")]
+        public async Task<IHttpActionResult> SendCode(SendCodeViewModel model)
+        {
+            var userId = await SignInManager.GetVerifiedUserIdAsync();
+
+            if (userId == null)
+            {
+                return BadRequest("Failed to verified User Id");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("SendCodeViewModel is not validated");
+            }
+
+            // Generate the token and send it
+
+            if (!await SignInManager.SendTwoFactorCodeAsync(model.SelectedProvider))
+            {
+                return BadRequest("Error while sending two factor code");
+            }
+            return Ok(model);
+        }
+
 
         private class ExternalLoginData
         {

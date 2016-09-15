@@ -91,11 +91,11 @@ namespace WebAPISite
         {
             // Plug in your email service here to send an email.
 
-            string fromEmail = "davidchang613@gmail.com"; // ConfigurationManager.AppSettings["FromEmail"];
+            string fromEmail = "webapi.smtp@gmail.com"; // ConfigurationManager.AppSettings["FromEmail"];
             string EmailServer = "smtp.gmail.com"; // ConfigurationManager.AppSettings["EMAILSERVER"];
             int PortNumber = 587; // Convert.ToInt32(ConfigurationManager.AppSettings["Port"]);
-            string username = ""; // ConfigurationManager.AppSettings["UserName"];
-            string pwd = ""; // ConfigurationManager.AppSettings["Pwd"];
+            string username = "webapi.smtp@gmail.com"; // ConfigurationManager.AppSettings["UserName"];
+            string pwd = "!234Asdf"; // ConfigurationManager.AppSettings["Pwd"];
 
             MailMessage email = new MailMessage(fromEmail, message.Destination);
             
@@ -106,6 +106,8 @@ namespace WebAPISite
             email.IsBodyHtml = true;
 
             var mailClient = new SmtpClient(EmailServer, PortNumber) { Credentials = new NetworkCredential(username, pwd) };
+
+            mailClient.EnableSsl = true;
 
             return mailClient.SendMailAsync(email);
 

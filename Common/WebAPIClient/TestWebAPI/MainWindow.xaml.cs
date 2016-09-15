@@ -88,7 +88,7 @@ namespace TestWebAPI
         {
             ReferralApplication caller = GetReferralApplication;
             string username = textBoxUserName.Text;
-            caller.SendCodeAsync(username, "Phone Code");
+            caller.SendCodeAsync(username, "Email Code");
             if (caller.IsLastCallSuccess)
                 labelCallStatus.Content = "Login Success with token returned.";
             Console.WriteLine("Send code");
@@ -99,7 +99,7 @@ namespace TestWebAPI
             ReferralApplication caller = GetReferralApplication;
             string username = textBoxUserName.Text;
             string code = textBoxCode.Text;
-            caller.VerifyCode(username, "Phone Code", code);
+            caller.VerifyCode(username, "Email Code", code);
         }
 
         private void buttonGetReferrals_Click(object sender, RoutedEventArgs e)
@@ -137,11 +137,24 @@ namespace TestWebAPI
         {
             ReferralApplication caller = GetReferralApplication;
             RegisterBindingModel registerModel = new RegisterBindingModel();
+            registerModel.BaseUrl = this.textBoxServerName.Text;
             registerModel.Email = textBoxRegisterEmail.Text;
             registerModel.Password = textBoxRegisterPassword.Text;
             registerModel.ConfirmPassword = textBoxRegisterConfirmPassword.Text;
             registerModel.Number = textBoxPhoneNumber.Text;
             caller.Register(registerModel);
+        }
+
+        private void btnGetCodeProviders_Click(object sender, RoutedEventArgs e)
+        {
+            ReferralApplication caller = GetReferralApplication;
+            caller.GetSendCodeProviders(textBoxUserName.Text);
+        }
+
+        private void buttonGetNumber_Click(object sender, RoutedEventArgs e)
+        {
+            ReferralApplication caller = GetReferralApplication;
+            caller.GetNumber();
         }
     }
 }

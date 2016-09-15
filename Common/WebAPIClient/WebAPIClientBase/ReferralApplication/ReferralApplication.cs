@@ -32,6 +32,11 @@ namespace ReferralApplicationPortable
         {
             return refAPI.GetStates();
         }
+
+        public int GetNumber()
+        {
+            return refAPI.GetNumber();
+        }
         #endregion
 
         #region IWebAPIApplication

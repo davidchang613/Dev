@@ -15,5 +15,7 @@ namespace APIReferenceAppPortable
         public const string GetCountries = "GetCountries";
         public const string GetStates = "GetStates";
         public const string GetReferencesByName = "GetReferencesByName";
+        public const string GetNumber = "GetNumber";
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 
@@ -129,5 +130,43 @@ namespace WebAPIModel
         //[Display(Name = "Confirm new password")]
         //[Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+    }
+
+
+    public class ResetPasswordViewModel
+    {
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
+        public string UserId { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; }
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
+
+        public string Code { get; set; }
+    }
+
+    public class LoginInfoViewModel
+    {
+        public string Email { get; set; }
+    }
+
+    public class SendCodeViewModel
+    {
+        public string Email { get; set; }
+        public string SelectedProvider { get; set; }
+        public ICollection<string> Providers { get; set; }
+        public string ReturnUrl { get; set; }
+        public bool RememberMe { get; set; }
     }
 }

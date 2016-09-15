@@ -25,7 +25,46 @@ namespace APIReferenceAppPortable
             clientBase.AddAPIPath(ReferenceAPIPath.GetCountries, @"/api/Reference/GetCountries");
             clientBase.AddAPIPath(ReferenceAPIPath.GetStates, @"/api/Reference/GetStates");
             clientBase.AddAPIPath(ReferenceAPIPath.GetReferencesByName, @"/api/Reference/GetReferencesByName");
+            clientBase.AddAPIPath(ReferenceAPIPath.GetNumber, @"/api/Reference/GetNumber");
+
         }
+
+        public int GetNumber()
+        {
+            string ftn = "GetNumber";
+            int number = 0;
+            using (HttpClient client = apiClientBase.GetClient(ftn, true))
+            {
+                HttpResponseMessage response = client.GetAsync(apiClientBase.GetServerAPIPath(ftn)).Result;
+                
+                string apiReturn = response.Content.ReadAsStringAsync().Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    //JArray codeProv = JArray.Parse(apiReturn);
+                    //    foreach (JToken refc in codeProv)
+                    //    {
+                    //         if (!(refc["id"] == null || string.IsNullOrEmpty(refc["id"].ToString())))
+                    //         {
+
+                    //        }
+                    //    }
+                    number = int.Parse(apiReturn);
+
+                    apiClientBase.SetLastCallResult(true, apiClientBase.GetAPIPath(ftn), "");
+                }
+                else
+                {
+                    //dynamic returnContent = JObject.Parse(apiReturn);
+                    //string failedReason = returnContent.Message;
+                    var returnContent = JObject.Parse(apiReturn);
+                    string failedReason = returnContent["Message"].ToString();
+                    apiClientBase.SetLastCallResult(false, apiClientBase.GetAPIPath(ftn), failedReason);
+                }
+            }
+            return number;
+        }
+    
 
         public List<Reference> GetCountries()
         {
