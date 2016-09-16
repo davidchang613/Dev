@@ -5,10 +5,12 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using WebAPISite.Attributes;
 
 namespace WebAPISite.Controllers
 {
     [Authorize]
+    [AuthorizeUserRole]
     [RoutePrefix("api/Reference")]
     public class ReferenceController : ApiController
     {
