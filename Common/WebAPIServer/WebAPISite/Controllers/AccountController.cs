@@ -480,6 +480,44 @@ namespace WebAPISite.Controllers
                 return GetErrorResult(result);
         }
 
+        [System.Web.Http.HttpPost]
+        //[ValidateAntiForgeryToken]
+        [System.Web.Http.Route("VerifyCode")]
+        public async Task<IHttpActionResult> VerifyCode(VerifyCodeViewModel model)
+        {
+            var user = await this.UserManager.FindByEmailAsync(model.Email);
+
+            var userinfo = this.SignInManager.GetVerifiedUserId();
+
+            if (user == null || userinfo == null)
+            {
+                return BadRequest("Failed to verified User Id");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("VerifyCodeViewModel is not valid");
+            }
+
+            // The following code protects for brute force attacks against the two factor codes. 
+            // If a user enters incorrect codes for a specified amount of time then the user account 
+            // will be locked out for a specified amount of time. 
+            // You can configure the account lockout settings in IdentityConfig
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: true, rememberBrowser: model.RememberBrowser);
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    this.UserManager.AddToRole(userinfo, "TwoFactorVerified");
+                    return Ok(user);
+                case SignInStatus.LockedOut:
+                    return BadRequest("User Locked out"); ;
+                case SignInStatus.Failure:
+                    return BadRequest("User signed in failed");
+                default:
+                    return BadRequest("Invalid singed in"); ;
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && _userManager != null)

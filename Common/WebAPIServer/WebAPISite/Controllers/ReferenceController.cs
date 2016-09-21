@@ -9,8 +9,9 @@ using WebAPISite.Attributes;
 
 namespace WebAPISite.Controllers
 {
+    //[Authorize(Roles = "TwoFactorVerified")]
     [Authorize]
-    [AuthorizeUserRole]
+    //[AuthorizeUserRole(]
     [RoutePrefix("api/Reference")]
     public class ReferenceController : ApiController
     {

@@ -137,44 +137,20 @@ namespace WebAPIClientBasePortable
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + _token);
         }
 
-        // This particular Login, gets a bearer token and login
+        
+        // This particular Login, bearer token is already there.
         public bool Login(string userName, string password, bool rememberMe)
         {
             _userName = userName;
             _password = password;
 
-            using (HttpClient client = GetClient(apiPath[ClientAPIPath.Login]))
-            {
-                var data = new { Email = userName, Password = password, RememberMe = rememberMe };
+            string apiFunction = ClientAPIPath.Login;            
 
-                List<KeyValuePair<string, string>> loginInfo = new List<KeyValuePair<string, string>>();
-                //loginInfo.Add(new KeyValuePair<string, string>("grant_type", "password"));
-                
-                loginInfo.Add(new KeyValuePair<string, string>("Email", _userName));
-                loginInfo.Add(new KeyValuePair<string, string>("password", _password));
-                loginInfo.Add(new KeyValuePair<string, string>("RememberMe", "true"));
+            var data = new { Email = userName, Password = password, RememberMe = rememberMe };
 
-                var loginContent = new FormUrlEncodedContent(loginInfo);
+            JObject joData = JObject.FromObject(data);
 
-                SetDefaultHeaders(client);
-
-                HttpResponseMessage response = client.PostAsync(_serverName + apiPath[ClientAPIPath.Login], loginContent).Result;
-
-                string apiReturn = response.Content.ReadAsStringAsync().Result;
-
-                var returnContent = JObject.Parse(apiReturn);
-
-                _lastCallSuccess = response.IsSuccessStatusCode;
-
-                string failedReason = string.Empty;
-                if (!_lastCallSuccess)
-                {
-                    failedReason = returnContent["Message"].ToString();
-                    if (returnContent["ExceptionMessage"] != null)
-                        failedReason += returnContent["ExceptionMessage"].ToString();
-                }
-                SetLastCallResult(_lastCallSuccess, apiPath[ClientAPIPath.Login], failedReason);
-            }
+            CallWebAPI(apiFunction, joData);            
 
             return _lastCallSuccess;
 
@@ -351,180 +327,74 @@ namespace WebAPIClientBasePortable
 
         public async void LoginAsync(string userName, string password, bool rememberMe)
         {
-            using (HttpClient client = GetClient(apiPath[ClientAPIPath.Login]))
-            {
-                var data = new { Email = userName, Password = password, RememberMe = rememberMe };
+            _userName = userName;
+            _password = password;
 
-                SetDefaultHeaders(client);
+            string apiFunction = ClientAPIPath.Login;
+            
+            var data = new { Email = userName, Password = password, RememberMe = rememberMe };
+            JObject joData = JObject.FromObject(data);
 
-                // This PostAsJsonAsync is available to the .net framework,
-                //HttpResponseMessage response = await client.PostAsJsonAsync(_serverName + apiPath[ClientAPIPath.Login], data);
-
-                // replace this for portable library
-                JObject o = JObject.FromObject(data);
-                HttpContent content = new StringContent(o.ToString(), UnicodeEncoding.UTF8, "application/json");
-                HttpResponseMessage response = await client.PostAsync(_serverName + apiPath[ClientAPIPath.Login], content);
-
-                string apiReturn = await response.Content.ReadAsStringAsync();
-
-                var returnContent = JObject.Parse(apiReturn);
-
-                if (response.IsSuccessStatusCode)
-                {
-
-                }
-                else
-                {
-                    string failedReason = returnContent["Message"].ToString();
-                }
-            }
+            await CallWebAPIAsync(apiFunction, joData);
+            
         }
 
         public void Logout()
         {
-            using (HttpClient client = GetClient(apiPath[ClientAPIPath.Logout], true))
-            {
-                var data = new { };
-                JObject o = JObject.FromObject(data);
-                HttpContent content = new StringContent(o.ToString(), UnicodeEncoding.UTF8, "application/json");
+            string apiFunction = ClientAPIPath.Logout;            
 
-                HttpResponseMessage response = client.PostAsync(_serverName + apiPath[ClientAPIPath.Logout], content).Result;
+            var data = new {};
+            JObject joData = JObject.FromObject(data);
 
-                string apiReturn = response.Content.ReadAsStringAsync().Result;
-
-                var returnContent = JObject.Parse(apiReturn);
-
-                _lastCallSuccess = response.IsSuccessStatusCode;
-
-                string failedReason = string.Empty;
-                if (!_lastCallSuccess)
-                {
-                    failedReason = returnContent["Message"].ToString();
-                }
-                SetLastCallResult(_lastCallSuccess, apiPath[ClientAPIPath.Login], failedReason);
-            }
+            CallWebAPI(apiFunction, joData);
         }
 
         public void GetSendCodeProviders(string userName)
         {
-            using (HttpClient client = GetClient(apiPath[ClientAPIPath.GetSendCodeProviders]))
-            {
-                var data = new { Email = userName };
+            Action<string> assignProviders = (apiReturn) =>
+            {                
+                JArray codeProv = JArray.Parse(apiReturn);
+                var list = (from t in codeProv select new { Text = t["Text"].ToString(), Value = t["Value"].ToString() }).ToList();
+                this.codeProvider = list.ToDictionary(x => x.Text, x => x.Value);
+            };
 
-                SetDefaultHeaders(client);
+            string apiFunction = ClientAPIPath.GetSendCodeProviders;
 
-                //HttpResponseMessage response = client.PostAsJsonAsync(_serverName + apiPath[ClientAPIPath.GetSendCodeProviders], data).Result;
+            var data = new { Email = userName };
+            JObject joData = JObject.FromObject(data);
 
-                JObject o = JObject.FromObject(data);
-                HttpContent content = new StringContent(o.ToString(), UnicodeEncoding.UTF8, "application/json");
-                HttpResponseMessage response = client.PostAsync(_serverName + apiPath[ClientAPIPath.GetSendCodeProviders], content).Result;
-
-                string apiReturn = response.Content.ReadAsStringAsync().Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    JArray codeProv = JArray.Parse(apiReturn);
-                    var list = (from t in codeProv select new { Text = t["Text"].ToString(), Value = t["Value"].ToString() }).ToList();
-                    this.codeProvider = list.ToDictionary(x => x.Text, x => x.Value);
-                    SetLastCallResult(true, ClientAPIPath.GetSendCodeProviders, "");
-                }
-                else
-                {
-                    //dynamic returnContent = JObject.Parse(apiReturn);
-                    //string failedReason = returnContent.Message;
-                    var returnContent = JObject.Parse(apiReturn);
-                    string failedReason = returnContent["Message"].ToString();
-                    SetLastCallResult(false, ClientAPIPath.GetSendCodeProviders, failedReason);
-                }
-            }
+            CallWebAPI(apiFunction, joData, assignProviders);
+           
         }
 
         public async void SendCodeAsync(string userName, string selectedProvider)
         {
-            using (HttpClient client = GetClient(apiPath[ClientAPIPath.SendCode]))
-            {
-                var data = new { Email = userName, SelectedProvider = selectedProvider };
+            string apiFunction = ClientAPIPath.SendCode;
+            
+            var data = new { Email = userName, SelectedProvider = selectedProvider };
+            JObject joData = JObject.FromObject(data);
 
-                SetDefaultHeaders(client);
-
-                //HttpResponseMessage response = await client.PostAsJsonAsync(_serverName + apiPath[ClientAPIPath.SendCode], data);
-
-                JObject o = JObject.FromObject(data);
-                HttpContent content = new StringContent(o.ToString(), UnicodeEncoding.UTF8, "application/json");
-                HttpResponseMessage response = await client.PostAsync(_serverName + apiPath[ClientAPIPath.SendCode], content);
-
-                string apiReturn = await response.Content.ReadAsStringAsync();
-                var returnContent = JObject.Parse(apiReturn);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    SetLastCallResult(true, ClientAPIPath.SendCode, "");
-                }
-                else
-                {
-                    string failedReason = returnContent["Message"].ToString();
-                    SetLastCallResult(false, ClientAPIPath.SendCode, failedReason);
-                }
-            }
+            await CallWebAPIAsync(apiFunction, joData);
         }
-
+        
         public void SendCode(string userName, string selectedProvider)
         {
-            using (HttpClient client = GetClient(apiPath[ClientAPIPath.SendCode]))
-            {
-                var data = new { Email = userName, SelectedProvider = selectedProvider };
+            string apiFunction = ClientAPIPath.SendCode;
+                    
+            var data = new { Email = userName, SelectedProvider = selectedProvider };
+            JObject joData = JObject.FromObject(data);
 
-                SetDefaultHeaders(client);
-
-                //HttpResponseMessage response = client.PostAsJsonAsync(_serverName + apiPath[ClientAPIPath.SendCode], data).Result;
-                JObject o = JObject.FromObject(data);
-                HttpContent content = new StringContent(o.ToString(), UnicodeEncoding.UTF8, "application/json");
-                HttpResponseMessage response = client.PostAsync(_serverName + apiPath[ClientAPIPath.SendCode], content).Result;
-
-                string apiReturn = response.Content.ReadAsStringAsync().Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    JObject jo = JObject.Parse(apiReturn);
-
-                    SetLastCallResult(true, ClientAPIPath.SendCode, "");
-                }
-                else
-                {
-                    var returnContent = JObject.Parse(apiReturn);
-                    string failedReason = returnContent["Message"].ToString();
-                    SetLastCallResult(false, ClientAPIPath.SendCode, failedReason);
-                }
-            }
+            CallWebAPI(apiFunction, joData);
         }
-
-
+        
         public virtual void VerifyCode(string userName, string provider, string code)
         {
-            using (HttpClient client = GetClient(apiPath[ClientAPIPath.VerifyCode]))
-            {
-                var data = new { Email = userName, Provider = provider, Code = code };
+            string apiFunction = ClientAPIPath.VerifyCode;
+            
+            var data = new { Email = userName, Provider = provider, Code = code };
+            JObject joData = JObject.FromObject(data);
 
-                SetDefaultHeaders(client);
-
-                //HttpResponseMessage response = client.PostAsJsonAsync(_serverName + apiPath[ClientAPIPath.VerifyCode], data).Result;
-                JObject o = JObject.FromObject(data);
-                HttpContent content = new StringContent(o.ToString(), UnicodeEncoding.UTF8, "application/json");
-                HttpResponseMessage response = client.PostAsync(_serverName + apiPath[ClientAPIPath.VerifyCode], content).Result;
-
-                string apiReturn = response.Content.ReadAsStringAsync().Result;
-                var returnContent = JObject.Parse(apiReturn);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    SetLastCallResult(true, ClientAPIPath.VerifyCode, "");
-                }
-                else
-                {
-                    string failedReason = returnContent["Message"].ToString();
-                    SetLastCallResult(false, ClientAPIPath.VerifyCode, failedReason);
-                }
-            }
+            CallWebAPI(apiFunction, joData);  
         }
 
         protected virtual RegisterBindingModel getRegisterBindingModel(RegisterBindingModel model)
@@ -534,104 +404,96 @@ namespace WebAPIClientBasePortable
 
         public virtual void Register(RegisterBindingModel model)
         {
-            SetBeginCallEvent(ClientAPIPath.Register);
+            string apiFunction = ClientAPIPath.Register;
+            
+            var data = getRegisterBindingModel(model);            
+            JObject joData = JObject.FromObject(data);
 
-            using (HttpClient client = GetClient(apiPath[ClientAPIPath.Register]))
-            {
-                var data = getRegisterBindingModel(model);
-
-                //HttpResponseMessage response = client.PostAsJsonAsync(_serverName + apiPath[ClientAPIPath.Register], data).Result;
-
-                JObject o = JObject.FromObject(data);
-                HttpContent content = new StringContent(o.ToString(), UnicodeEncoding.UTF8, "application/json");
-                HttpResponseMessage response = client.PostAsync(_serverName + apiPath[ClientAPIPath.Register], content).Result;
-
-                string apiReturn = response.Content.ReadAsStringAsync().Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    SetLastCallResult(true, ClientAPIPath.Register, "");
-                }
-                else
-                {
-                    string failedReason = ParseReturnError(apiReturn);                    
-                    SetLastCallResult(false, ClientAPIPath.Register, failedReason);
-                }
-            }
+            CallWebAPI(apiFunction, joData);
         }
 
         public virtual async void RegisterAsync(RegisterBindingModel model)
         {
-            using (HttpClient client = GetClient(apiPath[ClientAPIPath.Register]))
-            {
-                var data = getRegisterBindingModel(model); // new { Email = model.Email, Password = model.Password, ConfirmPassword = model.ConfirmPassword, Number = model.Number };
+            string apiFunction = ClientAPIPath.Register;
+            
+            var data = getRegisterBindingModel(model);
+            JObject joData = JObject.FromObject(data);
 
-                //HttpResponseMessage response = await client.PostAsJsonAsync(_serverName + apiPath[ClientAPIPath.Register], data);
-                JObject o = JObject.FromObject(data);
-                HttpContent content = new StringContent(o.ToString(), UnicodeEncoding.UTF8, "application/json");
-                HttpResponseMessage response = await client.PostAsync(_serverName + apiPath[ClientAPIPath.Register], content);
-
-                string apiReturn = await response.Content.ReadAsStringAsync();
-                var returnContent = JObject.Parse(apiReturn);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    SetLastCallResult(true, ClientAPIPath.Register, "");
-                }
-                else
-                {
-                    string failedReason = returnContent["Message"].ToString();
-                    SetLastCallResult(false, ClientAPIPath.Register, failedReason);
-                }
-            }
+            await CallWebAPIAsync(apiFunction, joData);
+           
         }
 
         public virtual void SetPassword(SetPasswordBindingModel model)
         {
-            using (HttpClient client = GetClient(apiPath[ClientAPIPath.SetPassword]))
-            {
-                var data = new { NewPassword = model.NewPassword, ConfirmPassword = model.ConfirmPassword };
+            string apiFunction = ClientAPIPath.SetPassword;
+            
+            var data = new { NewPassword = model.NewPassword, ConfirmPassword = model.ConfirmPassword };
+            JObject joData = JObject.FromObject(data);
 
-                //HttpResponseMessage response = client.PostAsJsonAsync(_serverName + apiPath[ClientAPIPath.SetPassword], data).Result;
-                JObject o = JObject.FromObject(data);
-                HttpContent content = new StringContent(o.ToString(), UnicodeEncoding.UTF8, "application/json");
-                HttpResponseMessage response = client.PostAsync(_serverName + apiPath[ClientAPIPath.SetPassword], content).Result;
-                string apiReturn = response.Content.ReadAsStringAsync().Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    SetLastCallResult(true, ClientAPIPath.SetPassword, "");
-                }
-                else
-                {
-                    var returnContent = JObject.Parse(apiReturn);
-                    string failedReason = returnContent["Message"].ToString();
-                    SetLastCallResult(false, ClientAPIPath.SetPassword, failedReason);
-                }
-            }
+            CallWebAPI(apiFunction, joData);
+            
         }
 
         public virtual void ForgotPassword(ForgotPasswordViewModel model)
         {
-            using (HttpClient client = GetClient(apiPath[ClientAPIPath.ForgotPassword]))
+            string apiFunction = ClientAPIPath.ForgotPassword;
+            
+            var data = new { Email = model.Email, BaseUrl = model.BaseUrl };
+            JObject joData = JObject.FromObject(data);
+
+            CallWebAPI(apiFunction, joData);           
+        }
+
+        private void CallWebAPI(string apiFunction, JObject jObjData)
+        {
+            CallWebAPI(apiFunction, jObjData, null);
+        }
+
+        private void CallWebAPI(string apiFunction, JObject jObjData, Action<string> processAPIReturn)
+        {            
+            string apiFunctionPath = apiPath[apiFunction];
+
+            using (HttpClient client = GetClient(apiFunctionPath, true))
             {
-                var data = new { Email = model.Email, BaseUrl = model.BaseUrl };
+                HttpContent content = new StringContent(jObjData.ToString(), UnicodeEncoding.UTF8, "application/json");
+                HttpResponseMessage response = client.PostAsync(_serverName + apiFunctionPath, content).Result;
 
-                //HttpResponseMessage response = client.PostAsJsonAsync(_serverName + apiPath[ClientAPIPath.ForgotPassword], data).Result;
-                JObject o = JObject.FromObject(data);
-                HttpContent content = new StringContent(o.ToString(), UnicodeEncoding.UTF8, "application/json");
-                HttpResponseMessage response = client.PostAsync(_serverName + apiPath[ClientAPIPath.ForgotPassword], content).Result;
                 string apiReturn = response.Content.ReadAsStringAsync().Result;
-
+                
                 if (response.IsSuccessStatusCode)
                 {
-                    SetLastCallResult(true, ClientAPIPath.ForgotPassword, "");
+                    SetLastCallResult(true, apiFunction, "");
+                    if (processAPIReturn != null)
+                        processAPIReturn(apiReturn);
                 }
                 else
                 {
-                    var returnContent = JObject.Parse(apiReturn);
-                    string failedReason = returnContent["Message"].ToString();
-                    SetLastCallResult(false, ClientAPIPath.ForgotPassword, failedReason);
+                    string failedReason = ParseReturnError(apiReturn);
+                    SetLastCallResult(false, apiFunction, failedReason);
+                }
+            }
+        }
+
+        private async Task CallWebAPIAsync(string apiFunction, JObject jObjData)
+        {
+            string apiFunctionPath = apiPath[apiFunction];
+
+            using (HttpClient client = GetClient(apiFunctionPath, true))
+            {
+                HttpContent content = new StringContent(jObjData.ToString(), UnicodeEncoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PostAsync(_serverName + apiFunctionPath, content);
+
+                string apiReturn = await response.Content.ReadAsStringAsync();                
+
+                if (response.IsSuccessStatusCode)
+                {
+                    JObject jo = JObject.Parse(apiReturn);
+                    SetLastCallResult(true, apiFunction, "");
+                }
+                else
+                {
+                    string failedReason = ParseReturnError(apiReturn);
+                    SetLastCallResult(false, apiFunction, failedReason);
                 }
             }
         }

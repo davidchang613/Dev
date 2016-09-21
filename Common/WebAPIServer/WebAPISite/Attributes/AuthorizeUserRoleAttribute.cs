@@ -17,6 +17,13 @@ namespace WebAPISite.Attributes
         //private AuthorizeUserRoleAttribute
         private ApplicationUserManager _UserManager = null;
 
+        private string _roleAllow = "";
+
+        public AuthorizeUserRoleAttribute(string role)
+        {
+            _roleAllow = role;
+        }
+
         protected override bool IsAuthorized(HttpActionContext actionContext)
         {
             bool isUserInRole = false;
