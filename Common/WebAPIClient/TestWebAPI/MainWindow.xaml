@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TestWebAPI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="419.7" Width="939.2">
+        Title="MainWindow" Height="544.8" Width="939.2">
     <Grid Margin="0,0,-6.2,-52.6" Height="375" VerticalAlignment="Top">
         <Label x:Name="labelCallStatus" Content="" HorizontalAlignment="Left" Height="60" Margin="76,10,0,0" VerticalAlignment="Top" Width="699"/>
-        <ListBox x:Name="listBoxEvents" HorizontalAlignment="Left" Height="195" Margin="71,400,0,0" VerticalAlignment="Top" Width="604"/>
+        <ListBox x:Name="listBoxEvents" HorizontalAlignment="Left" Height="75" Margin="171,420,0,-120" VerticalAlignment="Top" Width="604"/>
         <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="320" Margin="171,75,0,-20" VerticalAlignment="Top" Width="604">
             <TabItem Header="Register">
                 <Grid >

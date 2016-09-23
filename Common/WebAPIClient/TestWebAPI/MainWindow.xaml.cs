@@ -154,7 +154,11 @@ namespace TestWebAPI
         private void buttonGetNumber_Click(object sender, RoutedEventArgs e)
         {
             ReferralApplication caller = GetReferralApplication;
-            caller.GetNumber();
+            int number = caller.GetNumber();
+            if (caller.IsLastCallSuccess)
+            {
+
+            }
         }
     }
 }

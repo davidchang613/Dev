@@ -444,12 +444,12 @@ namespace WebAPIClientBasePortable
             CallWebAPI(apiFunction, joData);           
         }
 
-        private void CallWebAPI(string apiFunction, JObject jObjData)
+        public void CallWebAPI(string apiFunction, JObject jObjData)
         {
             CallWebAPI(apiFunction, jObjData, null);
         }
 
-        private void CallWebAPI(string apiFunction, JObject jObjData, Action<string> processAPIReturn)
+        public void CallWebAPI(string apiFunction, JObject jObjData, Action<string> processAPIReturn)
         {            
             string apiFunctionPath = apiPath[apiFunction];
 
@@ -470,6 +470,31 @@ namespace WebAPIClientBasePortable
                 {
                     string failedReason = ParseReturnError(apiReturn);
                     SetLastCallResult(false, apiFunction, failedReason);
+                }
+            }
+        }
+
+        public void CallWebAPIGet(string apiFunction, Action<string> processAPIReturn)
+        {
+            string apiFunctionPath = apiPath[apiFunction];
+
+            using (HttpClient client = GetClient(apiFunctionPath, true))
+            {
+                HttpResponseMessage response = client.GetAsync(GetServerAPIPath(apiFunction)).Result;
+
+                string apiReturn = response.Content.ReadAsStringAsync().Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    //number = int.Parse(apiReturn);
+                    if (processAPIReturn != null)
+                        processAPIReturn(apiReturn);
+                    SetLastCallResult(true, apiFunction, "");
+                }
+                else
+                {
+                    string failedReason = ParseReturnError(apiReturn);
+                    SetLastCallResult(false, apiReturn, failedReason);
                 }
             }
         }
@@ -497,27 +522,39 @@ namespace WebAPIClientBasePortable
                 }
             }
         }
-
+        
         private string ParseReturnError(string apiReturn)
         {
-            var returnContent = JObject.Parse(apiReturn);
-            string failedReason = returnContent["Message"].ToString();
-            if (returnContent["ModelState"] != null)
+            string failedReason = apiReturn;
+            
+            if (IsJson(apiReturn))
             {
-                failedReason += ":";
-                foreach(string error in returnContent["ModelState"][""])
+                var returnContent = JObject.Parse(apiReturn);
+                failedReason = returnContent["Message"].ToString();
+                if (returnContent["ModelState"] != null)
                 {
-                    failedReason += "\r\n" + error;
-                }                
-            }
+                    failedReason += ":";
+                    foreach (string error in returnContent["ModelState"][""])
+                    {
+                        failedReason += "\r\n" + error;
+                    }
+                }
 
-            if (returnContent["ExceptionMessage"] != null)
-            {
-                failedReason += "\r\n" + returnContent["ExceptionMessage"].ToString();                
+                if (returnContent["ExceptionMessage"] != null)
+                {
+                    failedReason += "\r\n" + returnContent["ExceptionMessage"].ToString();
+                }
             }
+            
 
             return failedReason;
         }
-            
+        
+        private bool IsJson(string input)
+        {
+            input = input.Trim();
+            return input.StartsWith("{") && input.EndsWith("}")
+                   || input.StartsWith("[") && input.EndsWith("]");
+        }
     }
 }

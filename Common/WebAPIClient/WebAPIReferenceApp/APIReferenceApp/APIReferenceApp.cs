@@ -31,38 +31,21 @@ namespace APIReferenceAppPortable
 
         public int GetNumber()
         {
-            string ftn = "GetNumber";
-            int number = 0;
-            using (HttpClient client = apiClientBase.GetClient(ftn, true))
+            int num = 0;
+            Action<string> processNumber = (apiReturn) =>
             {
-                HttpResponseMessage response = client.GetAsync(apiClientBase.GetServerAPIPath(ftn)).Result;
-                
-                string apiReturn = response.Content.ReadAsStringAsync().Result;
+                num = int.Parse(apiReturn);
+            };
 
-                if (response.IsSuccessStatusCode)
-                {
-                    //JArray codeProv = JArray.Parse(apiReturn);
-                    //    foreach (JToken refc in codeProv)
-                    //    {
-                    //         if (!(refc["id"] == null || string.IsNullOrEmpty(refc["id"].ToString())))
-                    //         {
+            string apiFunction = ReferenceAPIPath.GetNumber;
 
-                    //        }
-                    //    }
-                    number = int.Parse(apiReturn);
+            //var data = new { };
+            //JObject joData = JObject.FromObject(data);
 
-                    apiClientBase.SetLastCallResult(true, apiClientBase.GetAPIPath(ftn), "");
-                }
-                else
-                {
-                    //dynamic returnContent = JObject.Parse(apiReturn);
-                    //string failedReason = returnContent.Message;
-                    var returnContent = JObject.Parse(apiReturn);
-                    string failedReason = returnContent["Message"].ToString();
-                    apiClientBase.SetLastCallResult(false, apiClientBase.GetAPIPath(ftn), failedReason);
-                }
-            }
-            return number;
+            apiClientBase.CallWebAPIGet(apiFunction, processNumber);
+
+            return num;
+            
         }
     
 
@@ -76,49 +59,78 @@ namespace APIReferenceAppPortable
             return GetReferences(ReferenceAPIPath.GetStates);
         }
 
-
-        public List<Reference> GetReferences(string referencePath)
+        public List<Reference> GetReferences(string apiFunction)
         {
             List<Reference> references = new List<Reference>();
 
-            using (HttpClient client = apiClientBase.GetClient(referencePath))
+            Action<string> processReference = (apiReturn) =>
             {
-                //var data = new { Email = userName };
-                apiClientBase.SetDefaultHeaders(client);
-
-                HttpResponseMessage response = client.GetAsync(apiClientBase.GetServerAPIPath(referencePath)).Result;
-
-                string apiReturn = response.Content.ReadAsStringAsync().Result;
-
-                if (response.IsSuccessStatusCode)
+                JArray codeProv = JArray.Parse(apiReturn);
+                foreach (JToken refc in codeProv)
                 {
-                    JArray codeProv = JArray.Parse(apiReturn);
-                    foreach (JToken refc in codeProv)
+                    if (!(refc["id"] == null || string.IsNullOrEmpty(refc["id"].ToString())))
                     {
-                        if (!(refc["id"] == null || string.IsNullOrEmpty(refc["id"].ToString())))
-                        {
-                            Reference newRef = new Reference();
-                            newRef.id = new Guid(refc["id"].ToString());
-                            newRef.default_value = refc["default_value"].ToString();
-                            newRef.short_value = refc["short_value"].ToString();
-                            newRef.order = refc["order"].Value<int>();
-                            // add other columns
-                            references.Add(newRef);
-                        }
+                        Reference newRef = new Reference();
+                        newRef.id = new Guid(refc["id"].ToString());
+                        newRef.default_value = refc["default_value"].ToString();
+                        newRef.short_value = refc["short_value"].ToString();
+                        newRef.order = refc["order"].Value<int>();
+                        // add other columns
+                        references.Add(newRef);
                     }
+                }
+            };
 
-                    apiClientBase.SetLastCallResult(true, apiClientBase.GetAPIPath(referencePath), "");
-                }
-                else
-                {
-                    //dynamic returnContent = JObject.Parse(apiReturn);
-                    //string failedReason = returnContent.Message;
-                    var returnContent = JObject.Parse(apiReturn);
-                    string failedReason = returnContent["Message"].ToString();
-                    apiClientBase.SetLastCallResult(false, apiClientBase.GetAPIPath(referencePath), failedReason);
-                }
-            }
+            //var data = new { };
+            //JObject joData = JObject.FromObject(data);
+
+            apiClientBase.CallWebAPIGet(apiFunction, processReference);
+            
             return references;
         }
+
+        //public List<Reference> GetReferences(string referencePath)
+        //{
+        //    List<Reference> references = new List<Reference>();
+
+        //    using (HttpClient client = apiClientBase.GetClient(referencePath, true))
+        //    {
+        //        //var data = new { Email = userName };
+        //        //apiClientBase.SetDefaultHeaders(client);
+
+        //        HttpResponseMessage response = client.GetAsync(apiClientBase.GetServerAPIPath(referencePath)).Result;
+
+        //        string apiReturn = response.Content.ReadAsStringAsync().Result;
+
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            JArray codeProv = JArray.Parse(apiReturn);
+        //            foreach (JToken refc in codeProv)
+        //            {
+        //                if (!(refc["id"] == null || string.IsNullOrEmpty(refc["id"].ToString())))
+        //                {
+        //                    Reference newRef = new Reference();
+        //                    newRef.id = new Guid(refc["id"].ToString());
+        //                    newRef.default_value = refc["default_value"].ToString();
+        //                    newRef.short_value = refc["short_value"].ToString();
+        //                    newRef.order = refc["order"].Value<int>();
+        //                    // add other columns
+        //                    references.Add(newRef);
+        //                }
+        //            }
+
+        //            apiClientBase.SetLastCallResult(true, apiClientBase.GetAPIPath(referencePath), "");
+        //        }
+        //        else
+        //        {
+        //            //dynamic returnContent = JObject.Parse(apiReturn);
+        //            //string failedReason = returnContent.Message;
+        //            var returnContent = JObject.Parse(apiReturn);
+        //            string failedReason = returnContent["Message"].ToString();
+        //            apiClientBase.SetLastCallResult(false, apiClientBase.GetAPIPath(referencePath), failedReason);
+        //        }
+        //    }
+        //    return references;
+        //}
     }
 }
