@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 using WebAPIClientBasePortable;
 using APIReferenceAppPortable;
-using APIReferenceAppPortable.Models;
+//using APIReferenceAppPortable.Models;
 using APIReferralAppPortable;
 using WebAPIModel;
 using APIReferralAppPortable.Models;
@@ -27,7 +26,7 @@ namespace ReferralApplicationPortable
         public List<Reference> GetCountries()
         {
             return refAPI.GetCountries();
-        }       
+        }
 
         public List<Reference> GetStates()
         {
@@ -61,7 +60,5 @@ namespace ReferralApplicationPortable
         }
 
         #endregion
-
-
     }
 }

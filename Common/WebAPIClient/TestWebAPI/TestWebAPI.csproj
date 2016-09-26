@@ -104,13 +104,13 @@
       <Project>{4174df40-3acd-46a6-ba00-1b442a2d733e}</Project>
       <Name>APIReferralAppPortable</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ReferralApplicationPortable\ReferralApplicationPortable.csproj">
+      <Project>{8cebc6af-168b-4033-b53b-b890866e5a50}</Project>
+      <Name>ReferralApplicationPortable</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WebAPIClientBasePortable\WebAPIClientBasePortable.csproj">
       <Project>{5fa0ba31-1e8b-46ef-8266-b8172efe6c88}</Project>
       <Name>WebAPIClientBasePortable</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WebAPIClientBase\ReferralApplication\ReferralApplicationPortable.csproj">
-      <Project>{4af0d02c-8a76-4898-a28f-8bfff04543a7}</Project>
-      <Name>ReferralApplicationPortable</Name>
     </ProjectReference>
     <ProjectReference Include="..\WebAPIReferenceApp\APIReferenceApp\APIReferenceAppPortable.csproj">
       <Project>{27c72980-f08b-484e-8042-477d98b5e5b9}</Project>

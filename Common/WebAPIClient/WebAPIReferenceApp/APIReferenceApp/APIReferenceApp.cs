@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using WebAPIModel;
 
 namespace APIReferenceAppPortable
 {
@@ -26,7 +27,7 @@ namespace APIReferenceAppPortable
             clientBase.AddAPIPath(ReferenceAPIPath.GetStates, @"/api/Reference/GetStates");
             clientBase.AddAPIPath(ReferenceAPIPath.GetReferencesByName, @"/api/Reference/GetReferencesByName");
             clientBase.AddAPIPath(ReferenceAPIPath.GetNumber, @"/api/Reference/GetNumber");
-
+            clientBase.AddAPIPath(ReferenceAPIPath.GetReferences, @"/api/Reference/GetReferences");
         }
 
         public int GetNumber()
@@ -89,6 +90,44 @@ namespace APIReferenceAppPortable
             return references;
         }
 
+
+        public Dictionary<string, List<Reference>> GetReferences(List<string> referenceNames)
+        {
+            string apiFunction = ReferenceAPIPath.GetReferences;
+
+            Dictionary<string, List<Reference>> references = new Dictionary<string, List<Reference>>();
+
+            Action<string> processReferences = (apiReturn) =>
+            {
+                JObject jObjData = JObject.Parse(apiReturn);
+
+                foreach(string refName in referenceNames)
+                {
+                    if (jObjData[refName] != null)
+                    {
+                        JArray stateList = JArray.Parse(jObjData["STATE"].ToString());
+                        var list = from state in stateList
+                                   select new Reference()
+                                   {
+                                       id = new Guid(state["id"].ToString()),
+                                       default_value = state["default_value"].ToString()
+
+                                   };
+
+                        references.Add(refName, list.ToList());
+                    }
+                }                                
+
+            };
+
+            var data = new { referenceNames };
+            JObject joData = JObject.FromObject(data);
+
+            apiClientBase.CallWebAPI(apiFunction, joData, processReferences);
+
+            return null;
+
+        }
         //public List<Reference> GetReferences(string referencePath)
         //{
         //    List<Reference> references = new List<Reference>();

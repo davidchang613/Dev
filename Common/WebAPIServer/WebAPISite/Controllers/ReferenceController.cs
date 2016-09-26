@@ -11,7 +11,7 @@ using WebAPIModel;
 namespace WebAPISite.Controllers
 {
     //[Authorize(Roles = "TwoFactorVerified")]
-    [Authorize]
+   // [Authorize]
     //[AuthorizeUserRole(]
     [RoutePrefix("api/Reference")]
     public class ReferenceController : ApiController
@@ -26,14 +26,41 @@ namespace WebAPISite.Controllers
         [System.Web.Http.Route("GetStates")]
         public async Task<IHttpActionResult> GetStates()
         {
-            await Task.Delay(0);
             List<Reference> refList = new List<Reference>();
-            refList.Add(new Reference() { default_value = "defValue" });
-            refList.Add(new Reference() { default_value = "defValue" });
+            await Task.Run(() => {
+                refList.Add(new Reference() { default_value = "defValue" });
+                refList.Add(new Reference() { default_value = "defValue" });
+            });
+            
             return Ok(refList);
         }
 
 
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("GetReferences")]
+        public async Task<IHttpActionResult> GetReferences(List<string> referenceNames)
+        {                        
+            Dictionary<string, List<Reference>> referenceDictionary = new Dictionary<string, List<Reference>>();
+            List<Reference> refList = new List<Reference>();
+            await Task.Run(() => {
+                refList.Add(new Reference() { default_value = "MA" });
+                refList.Add(new Reference() { default_value = "NY" });
+                referenceDictionary.Add("STATE", refList);
+
+                refList = new List<Reference>();
+                refList.Add(new Reference() { default_value = "STOPPED" });
+                refList.Add(new Reference() { default_value = "RUNNING" });
+                referenceDictionary.Add("STATUS", refList);
+
+                refList = new List<Reference>();
+                refList.Add(new Reference() { default_value = "JANUARY" });
+                refList.Add(new Reference() { default_value = "FEBRUARY" });
+                referenceDictionary.Add("MONTH", refList);
+
+            });
+
+            return Ok(referenceDictionary);
+        }
 
         private Task<int> getSomeNumber()
         {

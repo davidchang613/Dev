@@ -499,6 +499,7 @@ namespace WebAPIClientBasePortable
             }
         }
 
+
         private async Task CallWebAPIAsync(string apiFunction, JObject jObjData)
         {
             string apiFunctionPath = apiPath[apiFunction];

@@ -153,7 +153,11 @@ namespace TestWebAPI
 
         private void buttonGetNumber_Click(object sender, RoutedEventArgs e)
         {
+
             ReferralApplication caller = GetReferralApplication;
+
+            Dictionary<string, List<Reference>> refLists = caller.GetReferences(new List<string> { "STATE", "STATUS", "MONTH" });
+
             int number = caller.GetNumber();
             if (caller.IsLastCallSuccess)
             {

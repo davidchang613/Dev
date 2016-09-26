@@ -50,6 +50,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\WebAPIModel\WebAPIModel.csproj">
+      <Project>{0d978434-8ad6-41df-833a-4f952c62eb15}</Project>
+      <Name>WebAPIModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\WebAPIClientBasePortable\WebAPIClientBasePortable.csproj">
       <Project>{5fa0ba31-1e8b-46ef-8266-b8172efe6c88}</Project>
       <Name>WebAPIClientBasePortable</Name>
