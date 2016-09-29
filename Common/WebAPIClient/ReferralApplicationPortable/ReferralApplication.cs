@@ -14,8 +14,9 @@ namespace ReferralApplicationPortable
 {
     public class ReferralApplication : APIClientBase, IWebAPIApplication, IAPIReferenceApp, IAPIReferralApp
     {
-        public APIReferenceApp refAPI;
-        public APIReferralApp referalAPI;
+        public IAPIReferenceApp refAPI;
+        public IAPIReferralApp referalAPI;
+        
 
         public ReferralApplication(string serverName) : base(serverName)
         {

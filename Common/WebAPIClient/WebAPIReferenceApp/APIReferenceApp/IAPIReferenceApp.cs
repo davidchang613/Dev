@@ -12,5 +12,7 @@ namespace APIReferenceAppPortable
     {
         List<Reference> GetCountries();
         List<Reference> GetStates();
+        Dictionary<string, List<Reference>> GetReferences(List<string> referenceNames);
+        int GetNumber();
     }
 }

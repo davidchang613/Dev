@@ -453,24 +453,31 @@ namespace WebAPIClientBasePortable
         {            
             string apiFunctionPath = apiPath[apiFunction];
 
-            using (HttpClient client = GetClient(apiFunctionPath, true))
+            try
             {
-                HttpContent content = new StringContent(jObjData.ToString(), UnicodeEncoding.UTF8, "application/json");
-                HttpResponseMessage response = client.PostAsync(_serverName + apiFunctionPath, content).Result;
+                using (HttpClient client = GetClient(apiFunctionPath, true))
+                {
+                    HttpContent content = new StringContent(jObjData.ToString(), UnicodeEncoding.UTF8, "application/json");
+                    HttpResponseMessage response = client.PostAsync(_serverName + apiFunctionPath, content).Result;
 
-                string apiReturn = response.Content.ReadAsStringAsync().Result;
-                
-                if (response.IsSuccessStatusCode)
-                {
-                    SetLastCallResult(true, apiFunction, "");
-                    if (processAPIReturn != null)
-                        processAPIReturn(apiReturn);
+                    string apiReturn = response.Content.ReadAsStringAsync().Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        SetLastCallResult(true, apiFunction, "");
+                        if (processAPIReturn != null)
+                            processAPIReturn(apiReturn);
+                    }
+                    else
+                    {
+                        string failedReason = ParseReturnError(apiReturn);
+                        SetLastCallResult(false, apiFunction, failedReason);
+                    }
                 }
-                else
-                {
-                    string failedReason = ParseReturnError(apiReturn);
-                    SetLastCallResult(false, apiFunction, failedReason);
-                }
+            }
+            catch(Exception ex)
+            {
+                SetLastCallResult(false, apiFunction, ex.Message);
             }
         }
 
@@ -478,24 +485,31 @@ namespace WebAPIClientBasePortable
         {
             string apiFunctionPath = apiPath[apiFunction];
 
-            using (HttpClient client = GetClient(apiFunctionPath, true))
+            try
+            {                
+                using (HttpClient client = GetClient(apiFunctionPath, true))
+                {
+                    HttpResponseMessage response = client.GetAsync(GetServerAPIPath(apiFunction)).Result;
+
+                    string apiReturn = response.Content.ReadAsStringAsync().Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        //number = int.Parse(apiReturn);
+                        if (processAPIReturn != null)
+                            processAPIReturn(apiReturn);
+                        SetLastCallResult(true, apiFunction, "");
+                    }
+                    else
+                    {
+                        string failedReason = ParseReturnError(apiReturn);
+                        SetLastCallResult(false, apiReturn, failedReason);
+                    }
+                }
+            }
+            catch (Exception ex)
             {
-                HttpResponseMessage response = client.GetAsync(GetServerAPIPath(apiFunction)).Result;
-
-                string apiReturn = response.Content.ReadAsStringAsync().Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    //number = int.Parse(apiReturn);
-                    if (processAPIReturn != null)
-                        processAPIReturn(apiReturn);
-                    SetLastCallResult(true, apiFunction, "");
-                }
-                else
-                {
-                    string failedReason = ParseReturnError(apiReturn);
-                    SetLastCallResult(false, apiReturn, failedReason);
-                }
+                SetLastCallResult(false, apiFunction, ex.Message);
             }
         }
 
@@ -504,23 +518,30 @@ namespace WebAPIClientBasePortable
         {
             string apiFunctionPath = apiPath[apiFunction];
 
-            using (HttpClient client = GetClient(apiFunctionPath, true))
+            try
             {
-                HttpContent content = new StringContent(jObjData.ToString(), UnicodeEncoding.UTF8, "application/json");
-                HttpResponseMessage response = await client.PostAsync(_serverName + apiFunctionPath, content);
-
-                string apiReturn = await response.Content.ReadAsStringAsync();                
-
-                if (response.IsSuccessStatusCode)
+                using (HttpClient client = GetClient(apiFunctionPath, true))
                 {
-                    JObject jo = JObject.Parse(apiReturn);
-                    SetLastCallResult(true, apiFunction, "");
+                    HttpContent content = new StringContent(jObjData.ToString(), UnicodeEncoding.UTF8, "application/json");
+                    HttpResponseMessage response = await client.PostAsync(_serverName + apiFunctionPath, content);
+
+                    string apiReturn = await response.Content.ReadAsStringAsync();
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        JObject jo = JObject.Parse(apiReturn);
+                        SetLastCallResult(true, apiFunction, "");
+                    }
+                    else
+                    {
+                        string failedReason = ParseReturnError(apiReturn);
+                        SetLastCallResult(false, apiFunction, failedReason);
+                    }
                 }
-                else
-                {
-                    string failedReason = ParseReturnError(apiReturn);
-                    SetLastCallResult(false, apiFunction, failedReason);
-                }
+            }
+            catch (Exception ex)
+            {
+                SetLastCallResult(false, apiFunction, ex.Message);
             }
         }
         

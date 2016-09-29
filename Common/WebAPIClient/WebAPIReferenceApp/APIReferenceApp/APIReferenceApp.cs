@@ -125,7 +125,7 @@ namespace APIReferenceAppPortable
 
             apiClientBase.CallWebAPI(apiFunction, joData, processReferences);
 
-            return null;
+            return references;
 
         }
         //public List<Reference> GetReferences(string referencePath)
