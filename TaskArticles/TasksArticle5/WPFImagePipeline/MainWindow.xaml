@@ -1,0 +1,164 @@
+﻿<Window x:Class="WPFImagePipeline.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:WPFImagePipeline.Controls"
+        Title="Tasks 5" 
+        Background="{x:Null}" 
+        Topmost="False" 
+        AllowsTransparency="True"
+        WindowStyle="None" 
+        WindowStartupLocation="CenterScreen" 
+        WindowState="Normal"
+        Height="600"
+        Width="800"
+        MinHeight="600" 
+        MinWidth="800" 
+        TextElement.FontFamily="Verdana"
+        Template="{StaticResource WindowTemplateKey}"
+        ResizeMode="CanResizeWithGrip">
+
+
+    <Grid>
+        <Border CornerRadius="5" BorderBrush="Black" Margin="0" 
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                BorderThickness="3" Background="#ff656565">
+
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="80"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Buttons -->
+                <Grid Grid.Row="0" HorizontalAlignment="Stretch" Height="80" Margin="0,0,0,0"
+                      MouseLeftButtonDown="MouseLeftButtonDown"
+                      Background="Black" >
+
+
+                    <Image Source="Images/LOGO.png" 
+                           HorizontalAlignment="Left" 
+                           VerticalAlignment="Center"
+                           Margin="10,0,0,0"/>
+
+                </Grid>
+
+
+                <!-- Actual Content Grid-->
+                <Grid Grid.Row="1" Width="Auto"  Height="Auto" Margin="0,0,0,10">
+                    <Grid.Effect>
+                        <DropShadowEffect BlurRadius="30" Color="Black" Direction="200" Opacity="1.0"/>
+                    </Grid.Effect>
+
+                    <StackPanel Orientation="Horizontal" Margin="40,5,10,10"
+                                MouseDown="Info_MouseDown" 
+                                VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <Image x:Name="info" Source="/Images/Info.png" 
+                           Width="30" Height="30" ToolTip="About"/>
+                        <Label Content="Information" VerticalAlignment="Center" 
+                               VerticalContentAlignment="Center"
+                                FontFamily="Haettenschweiler" FontSize="18"/>
+
+                    </StackPanel>
+
+
+
+                    <Border Margin="40" BorderBrush="Black" Grid.Row="0"  CornerRadius="8" 
+                            BorderThickness="6" Background="White">
+
+                        <controls:AsyncHost AsyncState="{Binding Path=AsyncState, Mode=OneWay}">
+
+                            <Grid x:Name="mainGrid" Background="White" Margin="5"
+                                    controls:AsyncHost.AsyncContentType="Content">
+
+
+                                <ListBox ItemsSource="{Binding ProcessedImages}" 
+                                    ItemTemplate="{StaticResource ImageInfoDataTemplate}" 
+                                    BorderThickness="0"
+                                    BorderBrush="Transparent"
+                                    ItemContainerStyle="{StaticResource ImageInfoListBoxItemStyle}">
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <controls:ScatterPanel Background="White">
+                                            </controls:ScatterPanel>
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+
+                                </ListBox>
+                            </Grid>
+                            <controls:AsyncBusyUserControl 
+                                controls:AsyncHost.AsyncContentType="Busy" 
+                                AsyncWaitText="{Binding Path=WaitText, Mode=OneWay}" 
+                                Visibility="Hidden" />
+                            <controls:AsyncFailedUserControl 
+                                controls:AsyncHost.AsyncContentType="Error" 
+                                Error="{Binding Path=ErrorMessage, Mode=OneWay}" 
+                                Visibility="Hidden" />
+                        </controls:AsyncHost>
+                    </Border>
+
+
+                </Grid>
+            </Grid>
+
+        </Border>
+
+        <StackPanel x:Name="spButtons" HorizontalAlignment="Right" 
+                        VerticalAlignment="Top" Margin="0,0,5,0" 
+                            Orientation="Horizontal">
+
+            <Button x:Name="Minimize" Click="Minimize_Click"  Width="26" Height="17">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Image x:Name="img" Source="/Images/Minimize.png" Width="26" Height="17"/>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="img" Property="Source" 
+                                                    Value="/Images/MinimizeMouseOver.png"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <Button x:Name="Maximize" Click="Maximize_Click" Width="25" Height="17">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Image x:Name="img" Source="/Images/Maximize.png" Width="25" Height="17"/>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="img" Property="Source" 
+                                                    Value="/Images/MaximizeMouseOver.png"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <Button x:Name="Exit" Click="Exit_Click" Width="44" Height="17">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Image x:Name="img" Source="/Images/close.png" Width="44" Height="17"/>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="img" Property="Source" 
+                                                    Value="/Images/closeMouseOver.png"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+        </StackPanel>
+    </Grid>
+
+
+
+
+
+
+
+
+
+</Window>

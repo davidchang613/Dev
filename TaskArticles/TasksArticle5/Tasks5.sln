@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimplePipeline", "SimplePipeline\SimplePipeline.csproj", "{64226035-7285-4530-A103-7D53535EAD73}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFImagePipeline", "WPFImagePipeline\WPFImagePipeline.csproj", "{6131B98C-5489-446F-AEE6-1B4F6DE56660}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bornander.UI", "Bornander.UI\Bornander.UI.csproj", "{A316366A-E368-4813-B37C-8B5CD5373BF1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{64226035-7285-4530-A103-7D53535EAD73}.Debug|x86.ActiveCfg = Debug|x86
+		{64226035-7285-4530-A103-7D53535EAD73}.Debug|x86.Build.0 = Debug|x86
+		{64226035-7285-4530-A103-7D53535EAD73}.Release|x86.ActiveCfg = Release|x86
+		{64226035-7285-4530-A103-7D53535EAD73}.Release|x86.Build.0 = Release|x86
+		{6131B98C-5489-446F-AEE6-1B4F6DE56660}.Debug|x86.ActiveCfg = Debug|x86
+		{6131B98C-5489-446F-AEE6-1B4F6DE56660}.Debug|x86.Build.0 = Debug|x86
+		{6131B98C-5489-446F-AEE6-1B4F6DE56660}.Release|x86.ActiveCfg = Release|x86
+		{6131B98C-5489-446F-AEE6-1B4F6DE56660}.Release|x86.Build.0 = Release|x86
+		{A316366A-E368-4813-B37C-8B5CD5373BF1}.Debug|x86.ActiveCfg = Debug|x86
+		{A316366A-E368-4813-B37C-8B5CD5373BF1}.Debug|x86.Build.0 = Debug|x86
+		{A316366A-E368-4813-B37C-8B5CD5373BF1}.Release|x86.ActiveCfg = Release|x86
+		{A316366A-E368-4813-B37C-8B5CD5373BF1}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
