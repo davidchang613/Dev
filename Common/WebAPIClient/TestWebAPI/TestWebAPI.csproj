@@ -100,21 +100,13 @@
       <Project>{0d978434-8ad6-41df-833a-4f952c62eb15}</Project>
       <Name>WebAPIModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\APIReferralAppPortable\APIReferralAppPortable.csproj">
-      <Project>{4174df40-3acd-46a6-ba00-1b442a2d733e}</Project>
-      <Name>APIReferralAppPortable</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ReferralApplicationPortable\ReferralApplicationPortable.csproj">
-      <Project>{8cebc6af-168b-4033-b53b-b890866e5a50}</Project>
-      <Name>ReferralApplicationPortable</Name>
+    <ProjectReference Include="..\APIApplications\APIDHMSApplicationPortable.csproj">
+      <Project>{4aa0e64f-3cda-4483-b113-ed2294051f0d}</Project>
+      <Name>APIDHMSApplicationPortable</Name>
     </ProjectReference>
     <ProjectReference Include="..\WebAPIClientBasePortable\WebAPIClientBasePortable.csproj">
       <Project>{5fa0ba31-1e8b-46ef-8266-b8172efe6c88}</Project>
       <Name>WebAPIClientBasePortable</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WebAPIReferenceApp\APIReferenceApp\APIReferenceAppPortable.csproj">
-      <Project>{27c72980-f08b-484e-8042-477d98b5e5b9}</Project>
-      <Name>APIReferenceAppPortable</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

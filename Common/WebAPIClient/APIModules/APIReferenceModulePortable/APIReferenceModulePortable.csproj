@@ -5,11 +5,11 @@
     <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4174DF40-3ACD-46A6-BA00-1B442A2D733E}</ProjectGuid>
+    <ProjectGuid>{31F0CBC3-E1F1-40A7-A0EE-E5C5388D3D7A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>APIReferralAppPortable</RootNamespace>
-    <AssemblyName>APIReferralAppPortable</AssemblyName>
+    <RootNamespace>APIReferenceModulePortable</RootNamespace>
+    <AssemblyName>APIReferenceModulePortable</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -34,26 +34,30 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="APIReferralApp.cs" />
+    <!-- A reference to the entire .NET Framework is automatically included -->
+    <ProjectReference Include="..\..\..\WebAPIModel\WebAPIModel.csproj">
+      <Project>{0d978434-8ad6-41df-833a-4f952c62eb15}</Project>
+      <Name>WebAPIModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\WebAPIClientBasePortable\WebAPIClientBasePortable.csproj">
+      <Project>{5fa0ba31-1e8b-46ef-8266-b8172efe6c88}</Project>
+      <Name>WebAPIClientBasePortable</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="APIReferenceModule.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="IAPIReferralApp.cs" />
-    <Compile Include="Models\Referral.cs" />
+    <Compile Include="IAPIReferenceModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\WebAPIClientBase\packages\Newtonsoft.Json.9.0.1\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\WebAPIClientBase\packages\Newtonsoft.Json.9.0.1\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WebAPIClientBasePortable\WebAPIClientBasePortable.csproj">
-      <Project>{5fa0ba31-1e8b-46ef-8266-b8172efe6c88}</Project>
-      <Name>WebAPIClientBasePortable</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

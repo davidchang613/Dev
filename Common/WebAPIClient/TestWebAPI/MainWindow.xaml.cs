@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using ReferralApplicationPortable;
+using APIDHMSApplicationPortable;
 using WebAPIModel;
 
 namespace TestWebAPI
@@ -22,15 +22,15 @@ namespace TestWebAPI
     /// </summary>
     public partial class MainWindow : Window
     {
-        ReferralApplication caller = null;
-        public ReferralApplication GetReferralApplication
+        APIDHMSApplication caller = null;
+        public APIDHMSApplication GetDHMSApplication
         {
             get
             {
                 if (caller == null)
                 {
                     string serverName = textBoxServerName.Text;
-                    caller = new ReferralApplication(serverName);
+                    caller = new APIDHMSApplication(serverName);
                     caller.FailedCallHandler += Caller_FailedCallHandler;
                     caller.SuccessCallHandler += Caller_SuccessCallHandler;
                     caller.BeginCallHandler += Caller_BeginCallHandler;
@@ -65,7 +65,7 @@ namespace TestWebAPI
 
         private void buttonLoginWithObj_Click(object sender, RoutedEventArgs e)
         {
-            ReferralApplication caller = GetReferralApplication;
+            APIDHMSApplication caller = GetDHMSApplication;
 
             string username = textBoxUserName.Text;
             string password = textBoxPassword.Password;
@@ -86,7 +86,7 @@ namespace TestWebAPI
 
         private void buttonSendCode_Click(object sender, RoutedEventArgs e)
         {
-            ReferralApplication caller = GetReferralApplication;
+            APIDHMSApplication caller = GetDHMSApplication;
             string username = textBoxUserName.Text;
             caller.SendCodeAsync(username, "Email Code");
             if (caller.IsLastCallSuccess)
@@ -96,7 +96,7 @@ namespace TestWebAPI
 
         private void buttonVerifyCode_Click(object sender, RoutedEventArgs e)
         {
-            ReferralApplication caller = GetReferralApplication;
+            APIDHMSApplication caller = GetDHMSApplication;
             string username = textBoxUserName.Text;
             string code = textBoxCode.Text;
             caller.VerifyCode(username, "Email Code", code);
@@ -104,15 +104,15 @@ namespace TestWebAPI
 
         private void buttonGetReferrals_Click(object sender, RoutedEventArgs e)
         {
-            ReferralApplication caller = GetReferralApplication;
+            APIDHMSApplication caller = GetDHMSApplication;
             string username = textBoxUserName.Text;
-            var list = caller.GetReferrals(username);
+            //var list = caller.GetReferrals(username);
             Console.WriteLine("GetReferrals");
         }
 
         private void buttonGetCountries_Click(object sender, RoutedEventArgs e)
         {
-            ReferralApplication caller = GetReferralApplication;
+            APIDHMSApplication caller = GetDHMSApplication;
             var list = caller.GetCountries();
             if (caller.IsLastCallSuccess)
             {
@@ -122,20 +122,20 @@ namespace TestWebAPI
 
         private void buttonGetStates_Click(object sender, RoutedEventArgs e)
         {
-            ReferralApplication caller = GetReferralApplication;
+            APIDHMSApplication caller = GetDHMSApplication;
             var list = caller.GetStates();
         }
 
         private void buttonLogout_Click(object sender, RoutedEventArgs e)
         {
-            ReferralApplication caller = GetReferralApplication;
+            APIDHMSApplication caller = GetDHMSApplication;
             caller.Logout();
 
         }
 
         private void buttonRegister_Click(object sender, RoutedEventArgs e)
         {
-            ReferralApplication caller = GetReferralApplication;
+            APIDHMSApplication caller = GetDHMSApplication;
             RegisterBindingModel registerModel = new RegisterBindingModel();
             registerModel.BaseUrl = this.textBoxServerName.Text;
             registerModel.Email = textBoxRegisterEmail.Text;
@@ -147,14 +147,14 @@ namespace TestWebAPI
 
         private void btnGetCodeProviders_Click(object sender, RoutedEventArgs e)
         {
-            ReferralApplication caller = GetReferralApplication;
+            APIDHMSApplication caller = GetDHMSApplication;
             caller.GetSendCodeProviders(textBoxUserName.Text);
         }
 
         private void buttonGetNumber_Click(object sender, RoutedEventArgs e)
         {
 
-            ReferralApplication caller = GetReferralApplication;
+            APIDHMSApplication caller = GetDHMSApplication;
 
             Dictionary<string, List<Reference>> refLists = caller.GetReferences(new List<string> { "STATE", "STATUS", "MONTH" });
 
@@ -163,6 +163,14 @@ namespace TestWebAPI
             {
 
             }
+        }
+
+        private void buttonGetMember_Click(object sender, RoutedEventArgs e)
+        {
+            APIDHMSApplication caller = GetDHMSApplication;
+
+           // Member member = caller.Get("id");
+
         }
     }
 }

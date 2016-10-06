@@ -5,15 +5,15 @@
     <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0D978434-8AD6-41DF-833A-4F952C62EB15}</ProjectGuid>
+    <ProjectGuid>{4AA0E64F-3CDA-4483-B113-ED2294051F0D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WebAPIModel</RootNamespace>
-    <AssemblyName>WebAPIModel</AssemblyName>
+    <RootNamespace>APIDHMSApplication</RootNamespace>
+    <AssemblyName>APIDHMSApplication</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -34,14 +34,27 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AccountModel.cs" />
-    <Compile Include="MemberModel.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <!-- A reference to the entire .NET Framework is automatically included -->
+    <ProjectReference Include="..\..\WebAPIModel\WebAPIModel.csproj">
+      <Project>{0d978434-8ad6-41df-833a-4f952c62eb15}</Project>
+      <Name>WebAPIModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\APIModules\APIMemberModulePortable\APIMemberModulePortable.csproj">
+      <Project>{318d0f02-eb7c-4f90-9c4b-9410bad4b12e}</Project>
+      <Name>APIMemberModulePortable</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\APIModules\APIReferenceModulePortable\APIReferenceModulePortable.csproj">
+      <Project>{31f0cbc3-e1f1-40a7-a0ee-e5c5388d3d7a}</Project>
+      <Name>APIReferenceModulePortable</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebAPIClientBasePortable\WebAPIClientBasePortable.csproj">
+      <Project>{5fa0ba31-1e8b-46ef-8266-b8172efe6c88}</Project>
+      <Name>WebAPIClientBasePortable</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System.ComponentModel.DataAnnotations">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6\System.ComponentModel.DataAnnotations.dll</HintPath>
-    </Reference>
+    <Compile Include="APIDHMSApplication.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

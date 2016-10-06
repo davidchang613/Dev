@@ -16,6 +16,19 @@ namespace WebAPISite.Controllers
     [RoutePrefix("api/Reference")]
     public class ReferenceController : ApiController
     {
+
+        public IEnumerable<Reference> GetList()
+        {
+            List<Reference> list = new List<Reference>();
+            
+            return list;
+        }
+
+        public async Task<IEnumerable<Reference>> GetListAsync()
+        {
+            return await Task.FromResult(GetList());
+        }
+
         [System.Web.Http.Route("GetNumber")]
         public async Task<IHttpActionResult> GetNumber()
         {
@@ -34,6 +47,7 @@ namespace WebAPISite.Controllers
             
             return Ok(refList);
         }
+
 
 
         [System.Web.Http.HttpPost]

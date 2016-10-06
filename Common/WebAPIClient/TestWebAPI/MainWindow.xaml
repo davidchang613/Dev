@@ -41,7 +41,7 @@
                         <ColumnDefinition Width="52*"/>
                         <ColumnDefinition Width="214*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox x:Name="textBoxServerName" HorizontalAlignment="Left" Height="23" Margin="6,23.2,0,0" TextWrapping="Wrap" Text="http://dt-awstes-ws01" VerticalAlignment="Top" Width="209" Grid.ColumnSpan="6" Grid.Row="1" Grid.Column="1"/>
+                    <TextBox x:Name="textBoxServerName" HorizontalAlignment="Left" Height="23" Margin="6,23.2,0,0" TextWrapping="Wrap" Text="http://localhost:29506/" VerticalAlignment="Top" Width="209" Grid.ColumnSpan="6" Grid.Row="1" Grid.Column="1"/>
                     <TextBox x:Name="textBoxUserName" HorizontalAlignment="Left" Height="23" Margin="6,55.2,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="209" Text="dchang@dovetailhealth.com" Grid.ColumnSpan="6" Grid.Row="1" Grid.Column="1"/>
                     <TextBlock x:Name="textBlockToken" HorizontalAlignment="Left" Height="64" Margin="47.8,23.2,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="328" Grid.ColumnSpan="3" Grid.Column="6" Grid.Row="1"/>
                     <Button x:Name="buttonLogin_Copy" Content="Login With Obj&#xA;" HorizontalAlignment="Left" Height="24" Margin="6,113.2,0,0" VerticalAlignment="Top" Width="150" Click="buttonLoginWithObj_Click" Grid.ColumnSpan="5" Grid.Row="1" Grid.Column="1"/>
@@ -55,9 +55,16 @@
             </TabItem>
             <TabItem Header="TabItem">
                 <Grid Background="#FFE5E5E5">
-                    <Button x:Name="buttonGetStates" Content="Get States" HorizontalAlignment="Left" Margin="27,29,0,0" VerticalAlignment="Top" Width="83" Height="24" Click="buttonGetStates_Click"/>
-                    <Button x:Name="buttonGetCountries" Content="Get Countries" HorizontalAlignment="Left" Margin="27,69,0,0" VerticalAlignment="Top" Width="83" Height="24" Click="buttonGetCountries_Click"/>
-                    <Button x:Name="buttonGetNumber" Content="Get Number" HorizontalAlignment="Left" Margin="27,113,0,0" VerticalAlignment="Top" Width="83" Height="24" Click="buttonGetNumber_Click"/>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="14*"/>
+                        <ColumnDefinition Width="55*"/>
+                        <ColumnDefinition Width="15*"/>
+                        <ColumnDefinition Width="510*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="buttonGetStates" Content="Get States" HorizontalAlignment="Left" Margin="13.4,29,0,0" VerticalAlignment="Top" Width="83" Height="24" Click="buttonGetStates_Click" Grid.Column="1" Grid.ColumnSpan="3"/>
+                    <Button x:Name="buttonGetCountries" Content="Get Countries" HorizontalAlignment="Left" Margin="13.4,69,0,0" VerticalAlignment="Top" Width="83" Height="24" Click="buttonGetCountries_Click" Grid.Column="1" Grid.ColumnSpan="3"/>
+                    <Button x:Name="buttonGetNumber" Content="Get Number" HorizontalAlignment="Left" Margin="13.4,113,0,0" VerticalAlignment="Top" Width="83" Height="24" Click="buttonGetNumber_Click" Grid.Column="1" Grid.ColumnSpan="3"/>
+                    <Button x:Name="buttonGetMember" Content="Get Member" HorizontalAlignment="Left" Height="25" Margin="13.4,158,0,0" VerticalAlignment="Top" Width="83" Click="buttonGetMember_Click" Grid.Column="1" Grid.ColumnSpan="3"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Referral" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="57.6">

@@ -513,6 +513,37 @@ namespace WebAPIClientBasePortable
             }
         }
 
+        public void CallWebAPIGet(string apiFunction, string parameter, Action<string> processAPIReturn)
+        {
+            string apiFunctionPath = apiPath[apiFunction];
+
+            try
+            {
+                using (HttpClient client = GetClient(apiFunctionPath, true))
+                {
+                    HttpResponseMessage response = client.GetAsync(GetServerAPIPath(apiFunction) + parameter).Result;
+
+                    string apiReturn = response.Content.ReadAsStringAsync().Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        //number = int.Parse(apiReturn);
+                        if (processAPIReturn != null)
+                            processAPIReturn(apiReturn);
+                        SetLastCallResult(true, apiFunction, "");
+                    }
+                    else
+                    {
+                        string failedReason = ParseReturnError(apiReturn);
+                        SetLastCallResult(false, apiReturn, failedReason);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                SetLastCallResult(false, apiFunction, ex.Message);
+            }
+        }
 
         private async Task CallWebAPIAsync(string apiFunction, JObject jObjData)
         {
