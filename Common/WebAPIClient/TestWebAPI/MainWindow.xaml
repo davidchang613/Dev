@@ -41,7 +41,7 @@
                         <ColumnDefinition Width="52*"/>
                         <ColumnDefinition Width="214*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox x:Name="textBoxServerName" HorizontalAlignment="Left" Height="23" Margin="6,23.2,0,0" TextWrapping="Wrap" Text="http://localhost:29506/" VerticalAlignment="Top" Width="209" Grid.ColumnSpan="6" Grid.Row="1" Grid.Column="1"/>
+                    <TextBox x:Name="textBoxServerName" HorizontalAlignment="Left" Height="23" Margin="6,23.2,0,0" TextWrapping="Wrap" Text="https://localhost:44327" VerticalAlignment="Top" Width="209" Grid.ColumnSpan="6" Grid.Row="1" Grid.Column="1"/>
                     <TextBox x:Name="textBoxUserName" HorizontalAlignment="Left" Height="23" Margin="6,55.2,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="209" Text="dchang@dovetailhealth.com" Grid.ColumnSpan="6" Grid.Row="1" Grid.Column="1"/>
                     <TextBlock x:Name="textBlockToken" HorizontalAlignment="Left" Height="64" Margin="47.8,23.2,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="328" Grid.ColumnSpan="3" Grid.Column="6" Grid.Row="1"/>
                     <Button x:Name="buttonLogin_Copy" Content="Login With Obj&#xA;" HorizontalAlignment="Left" Height="24" Margin="6,113.2,0,0" VerticalAlignment="Top" Width="150" Click="buttonLoginWithObj_Click" Grid.ColumnSpan="5" Grid.Row="1" Grid.Column="1"/>

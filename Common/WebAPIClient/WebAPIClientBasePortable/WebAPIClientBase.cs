@@ -175,6 +175,32 @@ namespace WebAPIClientBasePortable
 
         }
 
+        public void SetLastCallResult(bool success, string lastCall, Exception ex)
+        {
+            // save the list???
+            _lastCallSuccess = success;
+            _lastCallMethod = lastCall;
+            _lastErrorDescription = ex.Message;
+            if (ex.InnerException != null)
+            {
+                _lastErrorDescription += "\r\n" + ex.InnerException.Message;
+                if (ex.InnerException.InnerException != null)
+                    _lastErrorDescription += "\r\n" + ex.InnerException.InnerException.Message;
+            }                
+
+            if (success)
+            {
+                if (SuccessCallHandler != null)
+                    SuccessCallHandler(string.Format("{0} success", lastCall));
+            }
+            else
+            {
+                if (FailedCallHandler != null)
+                    FailedCallHandler(string.Format("{0} failed: {1}", lastCall, _lastErrorDescription));
+            }
+
+        }
+
         public void SetBeginCallEvent(string lastCall)
         {
             if (BeginCallHandler != null)
@@ -202,6 +228,8 @@ namespace WebAPIClientBasePortable
         {
             // the second param prevents the Handler from being disposed with the client
             HttpClient client = new HttpClient(Handler, false);
+            // setting for Time out
+            client.Timeout = TimeSpan.FromSeconds(30);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             return client;
         }
@@ -248,39 +276,46 @@ namespace WebAPIClientBasePortable
 
             string token = string.Empty;
 
-            using (HttpClient client = GetClient(apiPath[ClientAPIPath.GetToken]))
+            try
             {
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
-                client.DefaultRequestHeaders.Referrer = new Uri(_serverName);
-
-                List<KeyValuePair<string, string>> loginInfo = new List<KeyValuePair<string, string>>();
-                loginInfo.Add(new KeyValuePair<string, string>("grant_type", "password"));
-                loginInfo.Add(new KeyValuePair<string, string>("username", _userName));
-                loginInfo.Add(new KeyValuePair<string, string>("password", _password));
-
-                var loginContent = new FormUrlEncodedContent(loginInfo);
-
-                HttpResponseMessage response = client.PostAsync(_serverName + apiPath[ClientAPIPath.GetToken], loginContent).Result;
-                string apiReturn = response.Content.ReadAsStringAsync().Result;
-
-                var responseJSON = JObject.Parse(apiReturn);
-
-                if (response.IsSuccessStatusCode)
+                using (HttpClient client = GetClient(apiPath[ClientAPIPath.GetToken]))
                 {
-                    success = true;
-                    errorDescription = "";
-                    if (responseJSON["access_token"] != null)
-                        _token = responseJSON["access_token"].ToString();
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+                    client.DefaultRequestHeaders.Referrer = new Uri(_serverName);
+
+                    List<KeyValuePair<string, string>> loginInfo = new List<KeyValuePair<string, string>>();
+                    loginInfo.Add(new KeyValuePair<string, string>("grant_type", "password"));
+                    loginInfo.Add(new KeyValuePair<string, string>("username", _userName));
+                    loginInfo.Add(new KeyValuePair<string, string>("password", _password));
+
+                    var loginContent = new FormUrlEncodedContent(loginInfo);
+
+                    HttpResponseMessage response = client.PostAsync(_serverName + apiPath[ClientAPIPath.GetToken], loginContent).Result;
+                    string apiReturn = response.Content.ReadAsStringAsync().Result;
+
+                    var responseJSON = JObject.Parse(apiReturn);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        success = true;
+                        errorDescription = "";
+                        if (responseJSON["access_token"] != null)
+                            _token = responseJSON["access_token"].ToString();
+                    }
+                    else
+                    {
+                        if (responseJSON["error_description"] != null)
+                            errorDescription = responseJSON["error_description"].ToString();
+                    }
                 }
-                else
-                {
-                    if (responseJSON["error_description"] != null)
-                        errorDescription = responseJSON["error_description"].ToString();
-                }
+
+                SetLastCallResult(success, ClientAPIPath.GetToken, errorDescription);
             }
-
-            SetLastCallResult(success, ClientAPIPath.GetToken, errorDescription);
+            catch(Exception ex)
+            {
+                SetLastCallResult(false, ClientAPIPath.GetToken, ex);
+            }
         }
 
         private async void GetTokenAsyncInternal()
@@ -477,7 +512,7 @@ namespace WebAPIClientBasePortable
             }
             catch(Exception ex)
             {
-                SetLastCallResult(false, apiFunction, ex.Message);
+                SetLastCallResult(false, apiFunction, ex);
             }
         }
 
@@ -509,7 +544,7 @@ namespace WebAPIClientBasePortable
             }
             catch (Exception ex)
             {
-                SetLastCallResult(false, apiFunction, ex.Message);
+                SetLastCallResult(false, apiFunction, ex);
             }
         }
 
@@ -541,7 +576,7 @@ namespace WebAPIClientBasePortable
             }
             catch (Exception ex)
             {
-                SetLastCallResult(false, apiFunction, ex.Message);
+                SetLastCallResult(false, apiFunction, ex);
             }
         }
 
@@ -572,7 +607,7 @@ namespace WebAPIClientBasePortable
             }
             catch (Exception ex)
             {
-                SetLastCallResult(false, apiFunction, ex.Message);
+                SetLastCallResult(false, apiFunction, ex);
             }
         }
         

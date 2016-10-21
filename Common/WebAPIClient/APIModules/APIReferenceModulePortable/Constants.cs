@@ -27,8 +27,8 @@ namespace APIReferenceModulePortable
         public const string GetCountriesPath = @"/api/Reference/GetCountries";
         public const string GetStatePaths = @"/api/Reference/GetStates";
         public const string GetReferencesByNamePath = @"/api/Reference/GetReferencesByName";
-        public const string GetNumberPath = "GetNumber";
-        public const string GetReferencesPath = "GetReferences";
+        public const string GetNumberPath = @"/api/Reference/GetNumber";
+        public const string GetReferencesPath = @"/api/Reference/GetReferences";
 
     }
 }
