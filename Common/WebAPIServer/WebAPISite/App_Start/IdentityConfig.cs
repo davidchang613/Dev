@@ -97,6 +97,8 @@ namespace WebAPISite
             string username = "webapi.smtp@gmail.com"; // ConfigurationManager.AppSettings["UserName"];
             string pwd = "!234Asdf"; // ConfigurationManager.AppSettings["Pwd"];
 
+            pwd = "fabmhmnemmuhuduh";
+
             MailMessage email = new MailMessage(fromEmail, message.Destination);
             
             email.Subject = message.Subject;
