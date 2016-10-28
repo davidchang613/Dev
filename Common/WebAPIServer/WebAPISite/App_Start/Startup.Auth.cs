@@ -51,14 +51,14 @@ namespace WebAPISite
 
             // Configure the application for OAuth based flow
             PublicClientId = "self";
-            OAuthOptions = new OAuthAuthorizationServerOptions
+           OAuthOptions = new OAuthAuthorizationServerOptions
             {
                 TokenEndpointPath = new PathString("/Token"),
                 Provider = new ApplicationOAuthProvider(PublicClientId),
                 AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(timeoutmin),
                 // In production mode set AllowInsecureHttp = false
-                AllowInsecureHttp = false
+                AllowInsecureHttp = true
             };
 
             // Enable the application to use bearer tokens to authenticate users
