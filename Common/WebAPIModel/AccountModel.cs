@@ -173,6 +173,28 @@ namespace WebAPIModel
         public string Code { get; set; }
     }
 
+    public class ChangePasswordViewModel
+    {
+
+        public string Email { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Current password")]
+        public string OldPassword { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "New password")]
+        public string NewPassword { get; set; }
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm new password")]
+        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
+    }
+
     public class LoginInfoViewModel
     {
         public string Email { get; set; }
@@ -185,6 +207,40 @@ namespace WebAPIModel
         public ICollection<string> Providers { get; set; }
         public string ReturnUrl { get; set; }
         public bool RememberMe { get; set; }
+    }
+
+    public class AddPhoneNumberViewModel
+    {
+
+        public string Email { get; set; }
+
+        [Required]
+        [Phone]
+        [Display(Name = "Phone Number")]
+        public string Number { get; set; }
+    }
+
+    public class ManageProfileViewModel
+    {
+        public string username { get; set; }
+        public bool HasPassword { get; set; }
+        public string PhoneNumber { get; set; }
+        public bool TwoFactor { get; set; }
+    }
+
+    public class VerifyPhoneNumberViewModel
+    {
+
+        public string Email { get; set; }
+
+        [Required]
+        [Display(Name = "Code")]
+        public string Code { get; set; }
+
+        [Required]
+        [Phone]
+        [Display(Name = "Phone Number")]
+        public string PhoneNumber { get; set; }
     }
 
     public class Reference

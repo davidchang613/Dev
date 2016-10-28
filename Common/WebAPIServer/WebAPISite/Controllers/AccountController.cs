@@ -24,11 +24,9 @@ namespace WebAPISite.Controllers
 {
     [Authorize]
     [RoutePrefix("api/Account")]
-    public class AccountController : ApiController
+    public class AccountController : BaseAccountController
     {
-        private const string LocalLoginProvider = "Local";
-        private ApplicationUserManager _userManager;
-        private ApplicationSignInManager _signInManager;  // added
+        private const string LocalLoginProvider = "Local";        
 
         public AccountController()
         {
@@ -40,31 +38,7 @@ namespace WebAPISite.Controllers
             UserManager = userManager;
             AccessTokenFormat = accessTokenFormat;
         }
-
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
-
-        // added
-        public ApplicationSignInManager SignInManager
-        {
-            get
-            {
-                return _signInManager ?? Request.GetOwinContext().Get<ApplicationSignInManager>();
-            }
-            private set
-            {
-                _signInManager = value;
-            }
-        }
+             
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
@@ -516,54 +490,14 @@ namespace WebAPISite.Controllers
                 default:
                     return BadRequest("Invalid singed in"); ;
             }
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && _userManager != null)
-            {
-                _userManager.Dispose();
-                _userManager = null;
-            }
-
-            base.Dispose(disposing);
-        }
+        }       
 
         #region Helpers
 
         private IAuthenticationManager Authentication
         {
             get { return Request.GetOwinContext().Authentication; }
-        }
-
-        private IHttpActionResult GetErrorResult(IdentityResult result)
-        {
-            if (result == null)
-            {
-                return InternalServerError();
-            }
-
-            if (!result.Succeeded)
-            {
-                if (result.Errors != null)
-                {
-                    foreach (string error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error);
-                    }
-                }
-
-                if (ModelState.IsValid)
-                {
-                    // No ModelState errors are available to send, so just return an empty BadRequest.
-                    return BadRequest();
-                }
-
-                return BadRequest(ModelState);
-            }
-
-            return null;
-        }
+        }        
 
 
         [System.Web.Http.HttpPost]
