@@ -81,6 +81,7 @@ namespace WebAPISite.Controllers
             return View();
         }
 
+
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)

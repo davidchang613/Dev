@@ -53,7 +53,7 @@ namespace WebAPISite
             });
 
             manager.EmailService = new EmailService();
-            //manager.SmsService = new SmsService();
+            manager.SmsService = new SmsService();
 
 
             var dataProtectionProvider = options.DataProtectionProvider;
@@ -115,5 +115,34 @@ namespace WebAPISite
 
             //return Task.FromResult(0);
         }
+    }
+
+    public class SmsService : IIdentityMessageService
+    {
+        public Task SendAsync(IdentityMessage message)
+        {
+            string fromEmail = "webapi.smtp@gmail.com"; // ConfigurationManager.AppSettings["FromEmail"];
+            string EmailServer = "smtp.gmail.com"; // ConfigurationManager.AppSettings["EMAILSERVER"];
+            int PortNumber = 587; // Convert.ToInt32(ConfigurationManager.AppSettings["Port"]);
+            string username = "webapi.smtp@gmail.com"; // ConfigurationManager.AppSettings["UserName"];
+            string pwd = "!234Asdf"; // ConfigurationManager.AppSettings["Pwd"];
+
+            pwd = "fabmhmnemmuhuduh";
+
+            MailMessage email = new MailMessage(fromEmail, message.Destination);
+
+            email.Subject = message.Subject;
+
+            email.Body = message.Body;
+
+            email.IsBodyHtml = true;
+
+            var mailClient = new SmtpClient(EmailServer, PortNumber) { Credentials = new NetworkCredential(username, pwd) };
+
+            mailClient.EnableSsl = true;
+
+            return mailClient.SendMailAsync(email);
+        }
+
     }
 }

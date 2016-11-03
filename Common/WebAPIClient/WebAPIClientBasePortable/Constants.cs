@@ -24,6 +24,8 @@ namespace WebAPIClientBasePortable
         public const string GetSendCodeProviders = "GetSendCodeProviders";
         public const string SendCode = "SendCode";
 
+        public const string AddPhoneNumber = "AddPhoneNumber";
+
     }
 
 }

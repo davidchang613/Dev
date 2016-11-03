@@ -172,5 +172,20 @@ namespace TestWebAPI
            // Member member = caller.Get("id");
 
         }
+
+        private void buttonAddPhone_Click(object sender, RoutedEventArgs e)
+        {
+            APIDHMSApplication caller = GetDHMSApplication;
+            caller.AddPhoneNumber(textBoxRegisterEmail.Text, textBoxPhoneNumber.Text);
+            if (caller.IsLastCallSuccess)
+            {
+                //
+            }
+            else
+            {
+
+            }
+
+        }
     }
 }

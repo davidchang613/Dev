@@ -20,6 +20,8 @@
                     <TextBox x:Name="textBoxRegisterPassword" HorizontalAlignment="Left" Height="23" Margin="79,68,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="145" Grid.ColumnSpan="2"/>
                     <TextBox x:Name="textBoxRegisterConfirmPassword" HorizontalAlignment="Left" Height="25" Margin="79,108,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="145" Grid.ColumnSpan="2"/>
                     <TextBox x:Name="textBoxPhoneNumber" Margin="0,148,369.6,115" RenderTransformOrigin="1.298,0.46" Grid.Column="1"></TextBox>
+                    <Button x:Name="buttonAddPhone" Content="Add Phone" Width="80" Grid.Column="1" Margin="175,148,254.6,115" Click="buttonAddPhone_Click"/>
+
                     <Button x:Name="buttonRegister" Margin="0,190,379.6,68" Grid.Column="1" Content="Register" Click="buttonRegister_Click" ></Button>
                 </Grid>
 

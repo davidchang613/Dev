@@ -72,6 +72,7 @@ namespace WebAPIClientBasePortable
             apiPath.Add(ClientAPIPath.GetSendCodeProviders, @"/api/Account/GetSendCodeProviders");
             apiPath.Add(ClientAPIPath.SendCode, @"/api/Account/SendCode");
 
+            apiPath.Add(ClientAPIPath.AddPhoneNumber, @"/api/AccountManagement/AddPhoneNumber");
         }
 
         public string GetServerAPIPath(string referencePath)
@@ -417,6 +418,16 @@ namespace WebAPIClientBasePortable
             string apiFunction = ClientAPIPath.SendCode;
                     
             var data = new { Email = userName, SelectedProvider = selectedProvider };
+            JObject joData = JObject.FromObject(data);
+
+            CallWebAPI(apiFunction, joData);
+        }
+
+        public void AddPhoneNumber(string userName, string phoneNumber)
+        {
+            string apiFunction = ClientAPIPath.AddPhoneNumber;
+
+            var data = new { Email = userName, Number = phoneNumber };
             JObject joData = JObject.FromObject(data);
 
             CallWebAPI(apiFunction, joData);

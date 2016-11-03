@@ -81,7 +81,8 @@ namespace WebAPISite.Controllers
             {
                 username = user.Email,
                 PhoneNumber = user.PhoneNumber,
-                TwoFactor = user.TwoFactorEnabled
+                TwoFactor = user.TwoFactorEnabled,
+                PhoneNumberConfirmed = user.PhoneNumberConfirmed
             }); // RedirectToAction("VerifyPhoneNumber", new { PhoneNumber = model.Number });
         }
 
