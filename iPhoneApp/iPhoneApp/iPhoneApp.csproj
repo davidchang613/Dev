@@ -100,6 +100,10 @@
     <Compile Include="ColorViewController.designer.cs">
       <DependentUpon>ColorViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="DetailUIViewController.cs" />
+    <Compile Include="DetailUIViewController.designer.cs">
+      <DependentUpon>DetailUIViewController.cs</DependentUpon>
+    </Compile>
     <Compile Include="DynamicUITableViewCell_.cs" />
     <Compile Include="DynamicUITableViewCell_.designer.cs">
       <DependentUpon>DynamicUITableViewCell_.cs</DependentUpon>

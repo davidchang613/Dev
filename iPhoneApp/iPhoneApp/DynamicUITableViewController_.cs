@@ -66,10 +66,24 @@ namespace iPhoneApp
             if (cell == null)
             { cell = new DynamicUITableViewCell(UITableViewCellStyle.Default, CellIdentifier); }
 
-            cell.SetValues(item);
+            //cell.SelectionStyle = UITableViewCellSelectionStyle.
+            //cell.viewc
+            
+                cell.SetValues(item);
             //cell.TextLabel.Text = item;
 
             return cell;
+        }
+
+        public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
+        {
+            //base.RowSelected(tableView, indexPath);
+            UIAlertController okAlertController = UIAlertController.Create("Row Selected", TableItems[indexPath.Row], UIAlertControllerStyle.Alert);
+            okAlertController.AddAction(UIAlertAction.Create("OK", UIAlertActionStyle.Default, null));
+
+            DetailUIViewController view = this.owner.Storyboard.InstantiateViewController("DetailUIViewController") as DetailUIViewController;
+            
+            this.owner.PresentViewController(view, true, null);
         }
     }
 }
