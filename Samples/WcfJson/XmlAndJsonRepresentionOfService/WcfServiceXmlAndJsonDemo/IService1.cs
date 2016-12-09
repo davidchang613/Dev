@@ -22,7 +22,7 @@ namespace WcfServiceXmlAndJsonDemo
 
         [OperationContract]
         [WebInvoke(Method = "GET", UriTemplate = "GetJson", ResponseFormat = WebMessageFormat.Json,BodyStyle = WebMessageBodyStyle.Wrapped)]
-        EmployeeJSON GetEmployeeJSON();
+        EmployeeJSON benGetEmployeeJSON();
 
         [OperationContract]       // if  WebMessageBodyStyle.Wrapped, the json object returned in the ajax is the name GetJsonWithParameterResult, if bare, just the json object return
         [WebInvoke(Method = "POST", UriTemplate = "GetJsonWithParameter/id={id}/action={action}", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped)]

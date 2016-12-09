@@ -161,7 +161,7 @@ namespace TestWebAPI
             int number = caller.GetNumber();
             if (caller.IsLastCallSuccess)
             {
-
+                this.labelCallStatus.Content = DateTime.Now.ToString() + " " + number.ToString();
             }
         }
 

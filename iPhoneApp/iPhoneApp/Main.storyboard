@@ -721,20 +721,32 @@
                                     <rect key="frame" x="120" y="112" width="168" height="21"/>
                                 </variation>
                             </label>
+                            <navigationBar contentMode="scaleToFill" id="750" translatesAutoresizingMaskIntoConstraints="NO">
+                                <rect key="frame" x="28" y="579" width="320" height="44"/>
+                                <items>
+                                    <navigationItem title="Title" id="751"/>
+                                </items>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="28" y="579" width="320" height="44"/>
+                                </variation>
+                            </navigationBar>
                         </subviews>
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="731"/>
                                 <exclude reference="732"/>
+                                <exclude reference="750"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
                             <mask key="subviews">
                                 <include reference="731"/>
                                 <include reference="732"/>
+                                <include reference="750"/>
                             </mask>
                         </variation>
                     </view>
+                    <navigationItem title="Title" id="749" translatesAutoresizingMaskIntoConstraints="NO" key="navigationItem"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="727" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
